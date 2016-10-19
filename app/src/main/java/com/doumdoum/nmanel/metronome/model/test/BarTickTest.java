@@ -1,8 +1,10 @@
-package metronome.test;
+package com.doumdoum.nmanel.metronome.model.test;
 
-import metronome.BarTick;
-import metronome.rythms.EigthNote;
-import metronome.rythms.QuarterNote;
+
+import com.doumdoum.nmanel.metronome.model.BarTick;
+import com.doumdoum.nmanel.metronome.model.rythms.EigthNote;
+import com.doumdoum.nmanel.metronome.model.rythms.QuarterNote;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

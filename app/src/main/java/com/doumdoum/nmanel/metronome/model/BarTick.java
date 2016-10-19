@@ -1,4 +1,4 @@
-package metronome;
+package com.doumdoum.nmanel.metronome.model;
 
 import java.util.ArrayList;
 import java.util.List;

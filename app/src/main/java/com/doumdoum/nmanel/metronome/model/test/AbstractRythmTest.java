@@ -1,10 +1,7 @@
-package metronome.test;
+package com.doumdoum.nmanel.metronome.model.test;
 
+import com.doumdoum.nmanel.metronome.model.AbstractRythm;
 
-import metronome.AbstractRythm;
-
-
-import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 

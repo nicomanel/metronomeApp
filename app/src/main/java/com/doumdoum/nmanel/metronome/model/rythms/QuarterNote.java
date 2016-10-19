@@ -1,6 +1,7 @@
-package metronome.rythms;
+package com.doumdoum.nmanel.metronome.model.rythms;
 
-import metronome.Note;
+
+import com.doumdoum.nmanel.metronome.model.Note;
 
 public class QuarterNote extends Note {
 

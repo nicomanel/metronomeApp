@@ -1,4 +1,4 @@
-package metronome;
+package com.doumdoum.nmanel.metronome.model;
 
 public abstract class AbstractRythm {
     protected int timeDivision;
