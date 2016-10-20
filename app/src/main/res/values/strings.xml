@@ -3,4 +3,9 @@
 
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="play_label">Play</string>
+    <string name="play_hint">Play Hint</string>
+    <string name="button_start">Start</string>
+    <string name="tempo_message">Type tempo</string>
+
 </resources>
