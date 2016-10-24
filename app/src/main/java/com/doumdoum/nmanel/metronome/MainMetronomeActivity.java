@@ -43,8 +43,12 @@ public class MainMetronomeActivity extends AppCompatActivity {
         Log.println(Log.INFO, "TagTest", "onClick Handler");
         int notificationMarker = 9;
         int positionNotificationPeriod = SAMPLE_RATE;
+
         track.setNotificationMarkerPosition(notificationMarker);
-        track.setPositionNotificationPeriod(positionNotificationPeriod * DURATION + 1);
+
+        track.setPositionNotificationPeriod(positionNotificationPeriod * DURATION);
+
+
         track.setPlaybackPositionUpdateListener(new AudioTrack.OnPlaybackPositionUpdateListener() {
             private static final String PLAYBACK_POSITON_UPDATE_TAG = "Playback Position Tag";
             @Override
@@ -72,7 +76,7 @@ public class MainMetronomeActivity extends AppCompatActivity {
 //        int offsetInBytes = -1;
         for(int i = 0; i < durationInSec; i++)
         {
-            int result =  track.write(forgeSample(SAMPLE_RATE, 1000), 0, sizeInBytes);
+            int result =  track.write(forgeSample(SAMPLE_RATE, 100), 0, sizeInBytes);
             Log.d(TAG, "writing sample #"+ i + " - result = " + result);
         }
     }
@@ -82,7 +86,10 @@ public class MainMetronomeActivity extends AppCompatActivity {
         Arrays.fill(sample, (byte) 0);
         for (int tickSubdivision = 0; tickSubdivision < tickLengthInHz; tickSubdivision++)
         {
-            sample[tickSubdivision] = (int)Short.MAX_VALUE;
+            if (tickSubdivision % 4 == 0)
+            {
+                sample[tickSubdivision] = (int)Short.MAX_VALUE;
+            }
         }
 
 //        for (int tickSubdivision = 0; tickSubdivision < tickLengthInHz; tickSubdivision++)
