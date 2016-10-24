@@ -7,5 +7,6 @@
     <string name="play_hint">Play Hint</string>
     <string name="button_start">Start</string>
     <string name="tempo_message">Type tempo</string>
+    <string name="PLAYBACK_POSITON_UPDATE_TAG">PlaybackPositionUpdateTag</string>
 
 </resources>
