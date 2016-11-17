@@ -1,9 +1,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0099cc"
-    tools:context="com.doumdoum.nmanel.metronome.com.example.nico.test.MainMetronomeActivity">
+    tools:context="com.doumdoum.nmanel.metronome.MainActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -11,64 +12,130 @@
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
-    <LinearLayout
-        android:orientation="vertical"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:text="Duration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView3"
-                android:layout_weight="1"/>
-            <EditText
-                android:layout_width="244dp"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:ems="10"
-                android:id="@+id/duration"
-                android:text="10"
-                tools:text="Duration" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:ems="10"
-                android:id="@+id/editText2"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:ems="10"
-                android:id="@+id/editText"
-                android:layout_weight="1" />
-        </LinearLayout>
+        <EditText
+            android:layout_width="244dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/tempo"
+            android:text="100"
+            tools:text="Tempo"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:singleLine="true" />
 
         <Button
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/button_start"
-            android:onClick="handleOnClick"/>
-    </LinearLayout>
+            android:id="@+id/startButton"
+            android:onClick="startStopTicking"
+            app:layout_constraintTop_toBottomOf="@+id/tempo"
+            android:layout_marginTop="40dp"
+            android:elevation="0dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:text="Tempo"
+            android:layout_width="69dp"
+            android:layout_height="17dp"
+            android:id="@+id/textView3"
+            android:layout_weight="1.03"
+            app:layout_constraintRight_toLeftOf="@+id/tempo"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintHorizontal_bias="0.81"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/tempo" />
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            app:layout_constraintTop_toBottomOf="@+id/startButton"
+            android:id="@+id/tempoIncreasingSwitch"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:visibility="visible">
+
+            <Switch
+                android:text="Increase Tempo"
+                android:layout_width="312dp"
+                android:layout_height="27dp"
+                android:id="@+id/bpmIncrementEnabling"
+                tools:layout_editor_absoluteY="0dp"
+                tools:layout_editor_absoluteX="8dp"
+                android:gravity="right|fill" />
+
+            <Switch
+                android:text='Skip bar'
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/skipBarEnabling"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:gravity="left|center_vertical|fill|start"
+                app:layout_constraintBottom_toBottomOf="@+id/bpmIncrementSettings" />
+
+            <GridLayout
+                android:layout_width="312dp"
+                android:layout_height="0dp"
+                android:columnCount="4"
+                android:rowCount="2"
+                android:orientation="horizontal"
+                tools:layout_editor_absoluteX="8dp"
+                android:id="@+id/bpmIncrementSettings"
+                app:layout_constraintTop_toBottomOf="@+id/bpmIncrementEnabling">
+
+                <TextView
+                    android:text="Every"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView9" />
+
+                <EditText
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:ems="10"
+                    android:id="@+id/barsNumberValue"
+                    android:layout_width="61dp" />
+
+                <TextView
+                    android:text="bars, increment bpm by"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView6"
+                    tools:text="increment bpm by"
+                    android:gravity="center|fill" />
+
+                <EditText
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:ems="10"
+                    android:id="@+id/bpmIncrementValue"
+                    android:layout_width="wrap_content" />
+
+            </GridLayout>
+
+
+        </android.support.constraint.ConstraintLayout>
+
+
+    </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>

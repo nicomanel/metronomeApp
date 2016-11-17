@@ -7,27 +7,39 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 
-import com.example.nico.test.R;import static android.media.AudioFormat.CHANNEL_OUT_MONO;
+import static android.media.AudioFormat.CHANNEL_OUT_MONO;
 import static android.media.AudioManager.STREAM_MUSIC;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int SAMPLE_RATE = (int)(16 * (int)Math.pow(10, 3));
+    private static final int SAMPLE_RATE = (int)(16 * (int) Math.pow(10, 3));
     public static final int SHORT_SIZE_IN_BYTE = 2;
 
-    private boolean ticking;
 
-    private AudioTrack track;
+    private boolean ticking;
+     private AudioTrack track;
     private BarGenerator barGenerator;
     private short[] bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_metronome);
+        Switch bpmIncrementEnabling = (Switch) findViewById(R.id.bpmIncrementEnabling);
+        bpmIncrementEnabling.setChecked(false);
+        setBpmIncrementSettingsVisibility();
+        bpmIncrementEnabling.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                setBpmIncrementSettingsVisibility();
+            }
+        });
         ticking = false;
     }
+
 
     @Override
     protected void onPause() {
@@ -43,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i("Resume", "resume");
         if (ticking)
         {
-            ((Button) findViewById(R.id.start_stop_button)).setText("Stop");
+            ((Button) findViewById(R.id.startButton)).setText("Stop");
         }
         if(track != null) {
             track.play();
@@ -58,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void initTrack() {
-        int tempo = (Integer.decode(((EditText) findViewById(R.id.tempoNumericField)).getText().toString())).intValue();
+        int tempo = (Integer.decode(((EditText) findViewById(R.id.tempo)).getText().toString())).intValue();
         barGenerator = new BarGenerator(tempo, SAMPLE_RATE);
         bar = barGenerator.generateFourBeatsBar();
         track = new AudioTrack(STREAM_MUSIC, SAMPLE_RATE, CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, bar.length * SHORT_SIZE_IN_BYTE, AudioTrack.MODE_STREAM);
@@ -107,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startStopTicking(View view) {
-        Button startStopButton = (Button) findViewById(R.id.start_stop_button);
+        Button startStopButton = (Button) findViewById(R.id.startButton);
 
         if (!ticking) {
             startTicking(startStopButton);
@@ -115,5 +127,19 @@ public class MainActivity extends AppCompatActivity {
         }
         stopTicking(startStopButton);
 
+    }
+
+    private  void setBpmIncrementSettingsVisibility()
+    {
+        View settings = findViewById(R.id.bpmIncrementSettings);
+        Switch bpmIncrementEnabling = (Switch) findViewById(R.id.bpmIncrementEnabling);
+        if (bpmIncrementEnabling.isChecked())
+        {
+            settings.setVisibility(View.VISIBLE);
+        }
+        else {
+            settings.setVisibility(View.GONE);
+        }
+        //settings.setVisibility(View.Gone);
     }
 }
