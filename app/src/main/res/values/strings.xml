@@ -3,11 +3,12 @@
 
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="play_label">Play</string>
-    <string name="play_hint">Play Hint</string>
-    <string name="button_start">Start</string>
+    <string name="startLabelButton">Start</string>
+    <string name="stoptLabelButton">Stop</string>
     <string name="tempo_message">Type tempo</string>
     <string name="PLAYBACK_POSITON_UPDATE_TAG">PlaybackPositionUpdateTag</string>
     <string name="title_activity_increase_tempo">IncreaseTempo</string>
+    <string name="defaultTempoValue">80</string>
+    <string name="defaultBarNumberValue">4</string>
 
 </resources>

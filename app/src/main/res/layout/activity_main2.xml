@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context="com.doumdoum.nmanel.metronome.Main2Activity">
+
+
+    <TextView
+        android:text="Tempo :"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tempoLabelId" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/tempoValueId"
+        android:text="@string/defaultTempoValue"
+        android:layout_toRightOf="@id/tempoLabelId" />
+
+    <Button
+        android:text="Start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/startStopButtonId"
+        android:onClick="startStopClickAction"
+        android:layout_below="@+id/tempoValueId" />
+
+    <Switch
+        android:text="Increase tempo periodically"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/increaseTempoSwitchId"
+        android:layout_below="@+id/startStopButtonId" />
+
+    <LinearLayout
+        android:id="@+id/increaseSettingsGroupId"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/increaseTempoSwitchId"
+        android:layout_centerInParent="true">
+            <TextView
+                android:text="every"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/everyLabelId"
+                android:padding="8dp" />
+
+            <EditText
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/barNumberValueId"
+                android:text="@string/defaultBarNumberValue" />
+
+            <TextView
+                android:text="bars"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/barsLabelId"
+                android:padding="8dp" />
+    </LinearLayout>
+    <Switch
+        android:text="Play one measure on two"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/skipMeasureSwitchId"
+        android:layout_below="@id/increaseSettingsGroupId"/>
+
+    <Switch
+        android:text="Enable timer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/timerSwitchId"
+        android:layout_below="@id/skipMeasureSwitchId"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/timerSwitchId"
+        android:id="@+id/durationTimerSettingsGroupId">
+
+        <EditText
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/durationTimerValueId"
+            android:layout_weight="1"
+            android:text="2"  />
+
+        <TextView
+            android:text="minutes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            android:layout_weight="1"
+            android:padding="8dp" />
+        </LinearLayout>
+</RelativeLayout>
