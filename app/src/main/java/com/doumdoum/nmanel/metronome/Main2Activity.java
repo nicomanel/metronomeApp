@@ -11,17 +11,22 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 
+import com.doumdoum.nmanel.metronome.model.Bar;
+import com.doumdoum.nmanel.metronome.model.Beat;
+
 import static android.media.AudioFormat.CHANNEL_OUT_MONO;
+import static android.media.AudioFormat.ENCODING_PCM_16BIT;
 import static android.media.AudioManager.STREAM_MUSIC;
+import static com.doumdoum.nmanel.metronome.SoundHelper.concatShortArrays;
+import static com.doumdoum.nmanel.metronome.SoundHelper.generatePureSound;
+
 
 public class Main2Activity extends AppCompatActivity {
-
-    private static final int SAMPLE_RATE = (int)(16 * Math.pow(10, 3));
-    private static final int SHORT_SIZE_IN_BYTE = 2;
     private boolean ticking;
     private AudioTrack track;
-    private short[] bar;
 
+    private final int SAMPLERATE = 16000;
+    private final int BUFFER_SIZE = SAMPLERATE * ENCODING_PCM_16BIT * 5 ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +60,7 @@ public class Main2Activity extends AppCompatActivity {
                                                   }
                                               }
         );
-
+        track = new AudioTrack(STREAM_MUSIC, SAMPLERATE, CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, BUFFER_SIZE, AudioTrack.MODE_STREAM);
         this.ticking = false;
 
     }
@@ -82,55 +87,166 @@ public class Main2Activity extends AppCompatActivity {
 
         if (!ticking) {
             startTicking(startStopButton);
+
             return;
         }
         stopTicking(startStopButton);
     }
 
-    private void initTrack() {
-        int tempo = Integer.decode(((EditText) findViewById(R.id.tempoValueId)).getText().toString()).intValue();
-        BarGenerator barGenerator = new BarGenerator(tempo, SAMPLE_RATE);
-        bar = barGenerator.generateFourBeatsBar();
-        track = new AudioTrack(STREAM_MUSIC, SAMPLE_RATE, CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, bar.length * SHORT_SIZE_IN_BYTE, AudioTrack.MODE_STREAM);
-        writeBar();
+
+    public void testSound(View view)
+    {
+        int SAMPLERATE = 16000;
+        final int BUFFER_SIZE = SAMPLERATE * ENCODING_PCM_16BIT * 5;
+
+        AudioTrack track = new AudioTrack(STREAM_MUSIC, 16000, CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, BUFFER_SIZE, AudioTrack.MODE_STREAM);
+        final short[] sound = concatShortArrays(
+                            concatShortArrays(
+                                concatShortArrays(
+                                    concatShortArrays(generatePureSound(SAMPLERATE, 500, 660),generatePureSound(SAMPLERATE, 500, 880)),
+                                generatePureSound(SAMPLERATE, 3000, 440)),
+                            generatePureSound(SAMPLERATE, 500, 880)),
+                        generatePureSound(SAMPLERATE, 500, 440));
+
+
+
+
+        Log.i(this.getClass().toString(), "getBufferSizeInFrames : " + track.getBufferSizeInFrames());
+        track.setPositionNotificationPeriod(SAMPLERATE);
         track.setPlaybackPositionUpdateListener(new AudioTrack.OnPlaybackPositionUpdateListener() {
-            //            private static final String PLAYBACK_POSITON_UPDATE_TAG = "Playback Position Tag";
+            private int iterationCounter = 1;
             @Override
             public void onMarkerReached(AudioTrack track) {
-                Log.i(this.getClass().toString(), "Marker Reached " + track.getNotificationMarkerPosition());
+                Log.i(this.getClass().toString(), "marker reach : " + track.getPlaybackHeadPosition());
+                track.write(sound, 0, sound.length);
             }
 
             @Override
             public void onPeriodicNotification(AudioTrack track) {
-                Log.i(this.getClass().toString(), "Periodic Notification : " + track.getPositionNotificationPeriod());
-                writeBar();
+                Log.i(this.getClass().toString(), "period notification reached: " + track.getPlaybackHeadPosition() + " / " + (track.getBufferSizeInFrames() * 0.8));
+
+                if (track.getPlaybackHeadPosition() >= iterationCounter * track.getBufferSizeInFrames() * 0.8)
+                {
+                    Log.i(this.getClass().toString(), "reaching the end, writing new data : " + track.write(sound, 0, sound.length));
+                    iterationCounter++;
+                }
             }
         });
-        track.setPositionNotificationPeriod(bar.length - 100);
+
+        Log.i(this.getClass().toString(), "sound.length : " + sound.length);
+        Log.i(this.getClass().toString(), "data written : " + track.write(sound, 0, sound.length));
+
+        track.play();
     }
 
-    private void writeBar() {
-        int result = track.write(bar, 0, bar.length);
-        Log.i(this.getClass().toString(), "write Result : " + result);
-    }
 
     private void startTicking(Button startStopButton)
     {
         Log.i(this.getClass().toString(), "startTicking()");
         startStopButton.setText("Stop");
         ticking = true;
-        initTrack();
-        track.play();
+        int tempo = Integer.decode(((EditText) findViewById(R.id.tempoValueId)).getText().toString());
+        boolean increasetempo = ((Switch)findViewById(R.id.increaseTempoSwitchId)).isChecked();
+        boolean silenceBar = ((Switch)findViewById(R.id.skipMeasureSwitchId)).isChecked();
+
+        final BarGenerator generator = new BarGenerator(tempo, SAMPLERATE, BUFFER_SIZE);
+        Bar bar = new Bar();
+        bar.addBeat(new Beat(Beat.Style.Accent2));
+        bar.addBeat(new Beat(Beat.Style.Accent1));
+        bar.addBeat(new Beat(Beat.Style.Accent1));
+        bar.addBeat(new Beat(Beat.Style.Accent1));
+        generator.setBar(bar);
+        Log.i("writing", "Start Writing : " + System.currentTimeMillis());
+        track.write(generator.getSamples(), 0, BUFFER_SIZE);
+        Log.i("writing", "End Writing : " + System.currentTimeMillis());
+        Log.i(this.getClass().toString(), "getBufferSizeInFrames : " + track.getBufferSizeInFrames());
+        track.setPositionNotificationPeriod(SAMPLERATE);
+        track.setPlaybackPositionUpdateListener(new AudioTrack.OnPlaybackPositionUpdateListener() {
+            private int iterationCounter = 1;
+            private final short[] buffer = new short[BUFFER_SIZE];
+            @Override
+            public void onMarkerReached(AudioTrack track) {
+            }
+
+            @Override
+            public void onPeriodicNotification(AudioTrack track) {
+                Log.i("toto", "onPeriodicNotification begin : " + track.getPlaybackHeadPosition() );
+                final AudioTrack track1 = track;
+                if (track.getPlaybackHeadPosition() >= iterationCounter * track.getBufferSizeInFrames() * 0.8)
+                {
+
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.i("toto", "writing new data begin " + System.currentTimeMillis());
+                                track1.write(generator.getSamples(), 0, BUFFER_SIZE);
+                                Log.i("toto", "writing new data end " + System.currentTimeMillis());
+                            }
+                        }).start();
+
+                        iterationCounter++;
+                }
+                Log.i("toto", "onPeriodicNotification end");
+            }
+        });
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                track.play();
+            }
+        }).start();
+
+
+
+
+
     }
 
     private void stopTicking(Button startStopButton)
     {
         Log.i(this.getClass().toString(), "stopTicking()");
-        track.pause();
-        track.flush();
-        track.stop();
         ticking = false;
+        track.stop();
         startStopButton.setText("Start");
     }
 
+    public void testBarGenerator(View view) {
+        final int SAMPLERATE = 16000;
+        final int BUFFER_SIZE = SAMPLERATE * ENCODING_PCM_16BIT * 5;
+        int tempo = 60;
+        final BarGenerator generator = new BarGenerator(tempo, SAMPLERATE, BUFFER_SIZE);
+        Bar bar = new Bar();
+        bar.addBeat(new Beat(Beat.Style.Accent2));
+        bar.addBeat(new Beat(Beat.Style.Accent1));
+        bar.addBeat(new Beat(Beat.Style.Accent1));
+        bar.addBeat(new Beat(Beat.Style.Accent1));
+        generator.setBar(bar);
+
+        AudioTrack track = new AudioTrack(STREAM_MUSIC, SAMPLERATE, CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT, BUFFER_SIZE, AudioTrack.MODE_STREAM);
+        short[] samples = generator.getSamples();
+        track.write(generator.getSamples(), 0, BUFFER_SIZE);
+        Log.i(this.getClass().toString(), "getBufferSizeInFrames : " + track.getBufferSizeInFrames());
+        track.setPositionNotificationPeriod(SAMPLERATE);
+        track.setPlaybackPositionUpdateListener(new AudioTrack.OnPlaybackPositionUpdateListener() {
+            private int iterationCounter = 1;
+            @Override
+            public void onMarkerReached(AudioTrack track) {
+            }
+
+            @Override
+            public void onPeriodicNotification(AudioTrack track) {
+                Log.i(this.getClass().toString(), "period notification reached: " + track.getPlaybackHeadPosition() + " / " + (track.getBufferSizeInFrames() * 0.8));
+
+                if (track.getPlaybackHeadPosition() >= iterationCounter * track.getBufferSizeInFrames() * 0.8)
+                {
+                    Log.i(this.getClass().toString(), "reaching the end, writing new data : " + track.write(generator.getSamples(), 0, BUFFER_SIZE));
+                    iterationCounter++;
+                }
+            }
+        });
+
+        track.play();
+
+    }
 }
