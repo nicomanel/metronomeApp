@@ -11,7 +11,7 @@ public class Bars {
     private List<Bar> bars;
 
     public Bars() {
-        bars = new ArrayList<Bar>();
+        bars = new ArrayList<>();
     }
 
     public List<Bar> getBars() {
@@ -34,7 +34,7 @@ public class Bars {
             if (first)
                 buffer.append(bar.getName());
             else
-                buffer.append(", " + bar.getName());
+                buffer.append(", ").append(bar.getName());
             first = false;
         }
         return buffer.toString();
