@@ -12,8 +12,8 @@ public class Beat {
         Silent(0),
         Accent1(880),
         Accent2(660),
-        normal(440),
-        ghost(220);
+        Normal(440),
+        Ghost(220);
 
         private int frequency;
         Style(int i) {
@@ -53,5 +53,15 @@ public class Beat {
         {
             samples[sampleIndex] = soundSamples[sampleIndex];
         }
+    }
+
+    public Style getBeatStyle()
+    {
+        return beatStyle;
+    }
+
+    public String toString()
+    {
+        return "Beat(" + getBeatStyle().name() + ")";
     }
 }

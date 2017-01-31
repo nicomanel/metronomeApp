@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    tools:context="com.doumdoum.nmanel.metronome.Main2Activity">
-
+    tools:context="com.doumdoum.nmanel.metronome.MainActivity">
 
     <TextView
         android:text="Tempo :"
@@ -46,14 +45,30 @@
         android:layout_below="@id/increaseTempoSwitchId"
         android:layout_centerInParent="true">
             <TextView
-                android:text="every"
+                android:text="increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/increaseLabelId"
+                android:padding="8dp" />
+            <EditText
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/BpmIncrementId"
+                android:text="5"
+                android:layout_below="@+id/increaseTempoSwitchId"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:text="BPM, every"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/everyLabelId"
                 android:padding="8dp" />
 
             <EditText
-                android:layout_width="20dp"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:ems="10"
@@ -106,4 +121,13 @@
             android:layout_weight="1"
             android:padding="8dp" />
         </LinearLayout>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_below="@+id/durationTimerSettingsGroupId"
+        android:layout_alignParentStart="true"
+        android:id="@+id/rythmSpinnerId" />
+
+
 </RelativeLayout>
