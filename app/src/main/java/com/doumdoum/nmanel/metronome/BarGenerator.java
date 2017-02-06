@@ -80,10 +80,13 @@ public class BarGenerator extends Observable{
         if ((measureNumberBeforeIncrement == measureCounterBeforeIncrement)) {
             measureCounterBeforeIncrement = 1;
             incrementedTempo += tempoIncrement;
+
             Log.i("incremented tempo", "incremented tempo : " + incrementedTempo);
         } else {
             measureCounterBeforeIncrement++;
+
         }
+        hasChanged();
         notifyObservers();
         return incrementedTempo;
     }

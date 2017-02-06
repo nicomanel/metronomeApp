@@ -134,19 +134,17 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
         final boolean enableTimer = ((Switch) findViewById(R.id.timerSwitchId)).isChecked();
         final boolean skipMeasure = ((Switch) findViewById(R.id.skipMeasureSwitchId)).isChecked();
-
-
+         final BarGenerator generator;
+         if (!increaseTempo)
+             generator = new BarGenerator(tempo, SAMPLERATE, BUFFER_SIZE);
+         else
+             generator = new BarGenerator(tempo, SAMPLERATE, increaseTempo, tempoIncrement, measureNumberBeforeIncrement, BUFFER_SIZE);
+        generator.addObserver(this);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final BarGenerator generator;
-                if (!increaseTempo)
-                    generator = new BarGenerator(tempo, SAMPLERATE, BUFFER_SIZE);
-                else
-                    generator = new BarGenerator(tempo, SAMPLERATE, increaseTempo, tempoIncrement, measureNumberBeforeIncrement, BUFFER_SIZE);
                 ticking = true;
-
-                Bar barToPlay = (Bar)rythmSpinner.getSelectedItem();
+                 Bar barToPlay = (Bar)rythmSpinner.getSelectedItem();
                 if (skipMeasure) {
                     barToPlay.forgeSilentNextBar();
                 }
@@ -206,6 +204,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        
+        Log.i("MainActivity", "to be updated");
     }
 }
