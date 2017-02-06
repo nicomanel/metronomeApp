@@ -10,5 +10,6 @@
     <string name="title_activity_increase_tempo">IncreaseTempo</string>
     <string name="defaultTempoValue">80</string>
     <string name="defaultBarNumberValue">4</string>
+    <string name="currentTempoLabel">Current Tempo :</string>
 
 </resources>

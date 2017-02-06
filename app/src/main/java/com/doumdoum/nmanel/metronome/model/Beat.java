@@ -2,6 +2,7 @@ package com.doumdoum.nmanel.metronome.model;
 
 import android.util.Log;
 
+import com.doumdoum.nmanel.metronome.DefaultSettings;
 import com.doumdoum.nmanel.metronome.SoundHelper;
 
 /**
@@ -47,8 +48,9 @@ public class Beat {
     }
 
     private void fillSamples(final short[] samples, int sampleRate) {
-        short[] soundSamples = SoundHelper.generatePureSound(sampleRate, 100, beatStyle.getFrequency());
-
+        short[] soundSamples = SoundHelper.generatePureSound(sampleRate, DefaultSettings.BEAT_LENGTH_IN_MS, beatStyle.getFrequency());
+        Log.i("samples", "samples : " + samples.length);
+        Log.i("samples", "soundSamples : " + soundSamples.length);
         for(int sampleIndex = 0; sampleIndex < soundSamples.length; sampleIndex++)
         {
             samples[sampleIndex] = soundSamples[sampleIndex];

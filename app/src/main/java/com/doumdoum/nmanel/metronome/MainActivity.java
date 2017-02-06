@@ -26,6 +26,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.FileOutputStream;
+import java.util.Observable;
+import java.util.Observer;
 
 import static android.R.layout.simple_list_item_1;
 import static android.media.AudioFormat.CHANNEL_OUT_MONO;
@@ -35,7 +37,7 @@ import static com.doumdoum.nmanel.metronome.SoundHelper.concatShortArrays;
 import static com.doumdoum.nmanel.metronome.SoundHelper.generatePureSound;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Observer {
     private boolean ticking;
     private AudioTrack track;
     private Bars bars;
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.i("debug", "increaseTempoSwitch changed : " + isChecked);
                 hideOrDisplaySwitchSettings(increaseTempoSwitch, findViewById(R.id.increaseSettingsGroupId));
+                findViewById(R.id.currentTempoId).setVisibility(increaseTempoSwitch.isChecked()?View.VISIBLE:View.INVISIBLE);
             }
         });
 
@@ -199,5 +202,10 @@ public class MainActivity extends AppCompatActivity {
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        
     }
 }

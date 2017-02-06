@@ -21,7 +21,7 @@ public class SoundHelper {
 
     public static short[] generatePureSound(int samplerate, int lengthInMs, int frequency)
     {
-        int sizeInSamples = lengthInMs * samplerate / 1000;
+        int sizeInSamples = getMinimalBeatLength(samplerate, lengthInMs);
         short[] resultSound = new short[sizeInSamples];
 
         for(int sampleIndex = 0; sampleIndex < sizeInSamples; sampleIndex++)
@@ -30,6 +30,11 @@ public class SoundHelper {
             resultSound[sampleIndex] = sample;
         }
         return resultSound;
+    }
+
+    public static int getMinimalBeatLength(int samplerate, int lengthInMs)
+    {
+        return (int)(lengthInMs * samplerate / 1000);
     }
 }
 

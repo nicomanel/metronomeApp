@@ -22,13 +22,22 @@
         android:text="@string/defaultTempoValue"
         android:layout_toRightOf="@id/tempoLabelId" />
 
+    <TextView
+        android:text="@string/currentTempoLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/currentTempoId"
+        android:padding="8dp"
+        android:visibility="invisible"
+        android:layout_below="@id/tempoValueId"/>
+
     <Button
         android:text="Start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/startStopButtonId"
         android:onClick="startStopClickAction"
-        android:layout_below="@+id/tempoValueId" />
+        android:layout_below="@+id/currentTempoId" />
 
     <Switch
         android:text="Increase tempo periodically"

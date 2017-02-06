@@ -65,4 +65,10 @@ public class Bar {
         }
         setNextBar(nextSilentBar);
     }
+
+    public int getBeatSamplesNumbers(int tempo, int sampleRate)
+    {
+        return beats.getFirst().getSamplesCount(tempo, sampleRate);
+    }
+
 }

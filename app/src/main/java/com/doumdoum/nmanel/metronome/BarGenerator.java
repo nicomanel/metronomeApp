@@ -5,13 +5,17 @@ import android.util.Log;
 
 import com.doumdoum.nmanel.metronome.model.Bar;
 
+import java.util.Observable;
 import java.util.concurrent.LinkedTransferQueue;
+
+import static com.doumdoum.nmanel.metronome.DefaultSettings.BEAT_LENGTH_IN_MS;
+import static com.doumdoum.nmanel.metronome.DefaultSettings.SAMPLERATE;
 
 /**
  * Created by nico on 24/10/2016.
  */
 
-public class BarGenerator {
+public class BarGenerator extends Observable{
     private LinkedTransferQueue<Short> samplesQueue;
     private boolean increaseTempo;
     private int tempoIncrement;
@@ -67,18 +71,20 @@ public class BarGenerator {
     }
 
     private int determineTempoAndUpdateCounters() {
+
         if (!increaseTempo)
             return tempo;
-
-        if (measureNumberBeforeIncrement == measureCounterBeforeIncrement)
-        {
+        if (!isIncrementPossible()) {
+            return incrementedTempo;
+        }
+        if ((measureNumberBeforeIncrement == measureCounterBeforeIncrement)) {
             measureCounterBeforeIncrement = 1;
             incrementedTempo += tempoIncrement;
-        }
-        else
-        {
+            Log.i("incremented tempo", "incremented tempo : " + incrementedTempo);
+        } else {
             measureCounterBeforeIncrement++;
         }
+        notifyObservers();
         return incrementedTempo;
     }
 
@@ -98,5 +104,11 @@ public class BarGenerator {
         forgeNextSamples();
     }
 
+    private boolean isIncrementPossible() {
+        int minmalBeatLength = SoundHelper.getMinimalBeatLength(SAMPLERATE, BEAT_LENGTH_IN_MS);
+        int beatLength = bar.getBeatSamplesNumbers(incrementedTempo, SAMPLERATE);
+        return (beatLength > minmalBeatLength);
+    }
 
 }
+
