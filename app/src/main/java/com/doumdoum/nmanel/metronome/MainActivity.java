@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 
 import com.doumdoum.nmanel.metronome.model.Bar;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner rythmSpinner;
     private final int SAMPLERATE = 16000;
     private final int BUFFER_SIZE = 1024;
+    private AndroidAudioDevice device;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +87,13 @@ public class MainActivity extends AppCompatActivity {
     private void intializeRythmSpinner() {
         bars = (new BarsManager(getApplicationContext())).loadBars();
         rythmSpinner = (Spinner)  findViewById(R.id.rythmSpinnerId);
-        rythmSpinner.setAdapter(new ArrayAdapter<Bar>(getApplicationContext(), simple_list_item_1, bars.getBars()));
+        ArrayAdapter<Bar> adapter = new ArrayAdapter<Bar>(getApplicationContext(), android.R.layout.simple_spinner_item, bars.getBars());
+                rythmSpinner.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        Log.i("testadapater" ,"" + adapter.getCount());
+        Log.i("testadapater" ,"" + rythmSpinner.getSelectedItem());
+
+
     }
 
     protected void hideOrDisplaySwitchSettings(Switch switchWithSettings, View settingsView) {
@@ -115,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
      private void startTicking(Button startStopButton) {
 
-        final AndroidAudioDevice device = new AndroidAudioDevice();
+        device = new AndroidAudioDevice();
         final int tempo = Integer.decode(((EditText) findViewById(R.id.tempoValueId)).getText().toString());
         final boolean increaseTempo = ((Switch) findViewById(R.id.increaseTempoSwitchId)).isChecked();
         final int tempoIncrement = Integer.decode(((EditText) findViewById(R.id.BpmIncrementId)).getText().toString());
@@ -152,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
     private void stopTicking(Button startStopButton) {
         Log.i(this.getClass().toString(), "stopTicking()");
         ticking = false;
-        track.stop();
+        device.stop();
         startStopButton.setText("Start");
     }
 

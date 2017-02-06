@@ -124,9 +124,10 @@
 
     <Spinner
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/durationTimerSettingsGroupId"
         android:layout_alignParentStart="true"
+
         android:id="@+id/rythmSpinnerId" />
 
 

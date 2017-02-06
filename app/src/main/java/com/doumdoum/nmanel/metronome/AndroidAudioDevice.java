@@ -36,4 +36,10 @@ public class AndroidAudioDevice
         for( int i = 0; i < samples.length; i++ )
             buffer[i] = samples[i];
     }
+
+    public void stop()
+    {
+        track.flush();
+        track.stop();
+    }
 }
