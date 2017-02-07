@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.doumdoum.nmanel.metronome.model.Bar;
 import com.doumdoum.nmanel.metronome.model.Bars;
@@ -29,22 +30,16 @@ import java.io.FileOutputStream;
 import java.util.Observable;
 import java.util.Observer;
 
-import static android.R.layout.simple_list_item_1;
-import static android.media.AudioFormat.CHANNEL_OUT_MONO;
-import static android.media.AudioFormat.ENCODING_PCM_16BIT;
-import static android.media.AudioManager.STREAM_MUSIC;
-import static com.doumdoum.nmanel.metronome.SoundHelper.concatShortArrays;
-import static com.doumdoum.nmanel.metronome.SoundHelper.generatePureSound;
-
 
 public class MainActivity extends AppCompatActivity implements Observer {
+    private final int SAMPLERATE = 16000;
+    private final int BUFFER_SIZE = 1024;
     private boolean ticking;
     private AudioTrack track;
     private Bars bars;
     private Spinner rythmSpinner;
-    private final int SAMPLERATE = 16000;
-    private final int BUFFER_SIZE = 1024;
     private AndroidAudioDevice device;
+    private BarGenerator generator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.i("debug", "increaseTempoSwitch changed : " + isChecked);
                 hideOrDisplaySwitchSettings(increaseTempoSwitch, findViewById(R.id.increaseSettingsGroupId));
-                findViewById(R.id.currentTempoId).setVisibility(increaseTempoSwitch.isChecked()?View.VISIBLE:View.INVISIBLE);
+                findViewById(R.id.currentTempoId).setVisibility(increaseTempoSwitch.isChecked() ? View.VISIBLE : View.INVISIBLE);
             }
         });
 
@@ -89,12 +84,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     private void intializeRythmSpinner() {
         bars = (new BarsManager(getApplicationContext())).loadBars();
-        rythmSpinner = (Spinner)  findViewById(R.id.rythmSpinnerId);
+        rythmSpinner = (Spinner) findViewById(R.id.rythmSpinnerId);
         ArrayAdapter<Bar> adapter = new ArrayAdapter<Bar>(getApplicationContext(), android.R.layout.simple_spinner_item, bars.getBars());
-                rythmSpinner.setAdapter(adapter);
+        rythmSpinner.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        Log.i("testadapater" ,"" + adapter.getCount());
-        Log.i("testadapater" ,"" + rythmSpinner.getSelectedItem());
+        Log.i("testadapater", "" + adapter.getCount());
+        Log.i("testadapater", "" + rythmSpinner.getSelectedItem());
 
 
     }
@@ -124,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
 
-     private void startTicking(Button startStopButton) {
+    private void startTicking(Button startStopButton) {
 
         device = new AndroidAudioDevice();
         final int tempo = Integer.decode(((EditText) findViewById(R.id.tempoValueId)).getText().toString());
@@ -134,17 +129,16 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
         final boolean enableTimer = ((Switch) findViewById(R.id.timerSwitchId)).isChecked();
         final boolean skipMeasure = ((Switch) findViewById(R.id.skipMeasureSwitchId)).isChecked();
-         final BarGenerator generator;
-         if (!increaseTempo)
-             generator = new BarGenerator(tempo, SAMPLERATE, BUFFER_SIZE);
-         else
-             generator = new BarGenerator(tempo, SAMPLERATE, increaseTempo, tempoIncrement, measureNumberBeforeIncrement, BUFFER_SIZE);
+        if (!increaseTempo)
+            generator = new BarGenerator(tempo, SAMPLERATE, BUFFER_SIZE);
+        else
+            generator = new BarGenerator(tempo, SAMPLERATE, increaseTempo, tempoIncrement, measureNumberBeforeIncrement, BUFFER_SIZE);
         generator.addObserver(this);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 ticking = true;
-                 Bar barToPlay = (Bar)rythmSpinner.getSelectedItem();
+                Bar barToPlay = (Bar) rythmSpinner.getSelectedItem();
                 if (skipMeasure) {
                     barToPlay.forgeSilentNextBar();
                 }
@@ -204,6 +198,20 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        Log.i("MainActivity", "to be updated");
+        final boolean increaseTempo = ((Switch) findViewById(R.id.increaseTempoSwitchId)).isChecked();
+
+        if (increaseTempo) {
+            final TextView currentTempoView = (TextView) findViewById(R.id.currentTempoId);
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String label = getResources().getString(R.string.currentTempoLabel);
+                    currentTempoView.setText("" + label + " " + generator.getIncrementedTempo());
+                }
+            });
+
+            Log.i("update", "" + +generator.getIncrementedTempo());
+
+        }
     }
 }

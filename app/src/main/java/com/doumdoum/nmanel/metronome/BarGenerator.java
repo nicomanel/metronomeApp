@@ -27,12 +27,11 @@ public class BarGenerator extends Observable{
     private int bufferSize;
     private Bar bar;
     private short[] samplesToWrite;
-
     public BarGenerator(int tempo, int sampleRate, boolean increaseTempo, int tempoIncrement, int measureNumberBeforeIncrement, int bufferSize) {
         samplesQueue = new LinkedTransferQueue();
         this.tempo = tempo;
         this.incrementedTempo = tempo;
-        this.measureCounterBeforeIncrement = 1;
+        this.measureCounterBeforeIncrement = 0;
         this.sampleRate = sampleRate;
         this.increaseTempo = increaseTempo;
         this.tempoIncrement = tempoIncrement;
@@ -44,6 +43,10 @@ public class BarGenerator extends Observable{
 
     public BarGenerator(int tempo, int sampleRate, int bufferSize) {
         this(tempo, sampleRate, false, 0, 0, bufferSize);
+    }
+
+    public int getIncrementedTempo() {
+        return incrementedTempo;
     }
 
     public short[] getSamples() {
@@ -74,19 +77,21 @@ public class BarGenerator extends Observable{
 
         if (!increaseTempo)
             return tempo;
-        if (!isIncrementPossible()) {
-            return incrementedTempo;
-        }
+
         if ((measureNumberBeforeIncrement == measureCounterBeforeIncrement)) {
             measureCounterBeforeIncrement = 1;
-            incrementedTempo += tempoIncrement;
+            if (isIncrementPossible()) {
+
+                incrementedTempo += tempoIncrement;
+
+            }
 
             Log.i("incremented tempo", "incremented tempo : " + incrementedTempo);
         } else {
             measureCounterBeforeIncrement++;
 
         }
-        hasChanged();
+        setChanged();
         notifyObservers();
         return incrementedTempo;
     }
@@ -109,9 +114,11 @@ public class BarGenerator extends Observable{
 
     private boolean isIncrementPossible() {
         int minmalBeatLength = SoundHelper.getMinimalBeatLength(SAMPLERATE, BEAT_LENGTH_IN_MS);
-        int beatLength = bar.getBeatSamplesNumbers(incrementedTempo, SAMPLERATE);
+        int beatLength = bar.getBeatSamplesNumbers(incrementedTempo + tempoIncrement, SAMPLERATE);
+        Log.i("isIncrementPossible", "minmalBeatLength: " + minmalBeatLength + ", beatLength:" + beatLength);
         return (beatLength > minmalBeatLength);
     }
+
 
 }
 
