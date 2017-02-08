@@ -39,7 +39,6 @@ public class BarGenerator extends Observable {
         this.bufferSize = bufferSize;
         this.measureNumberBeforeIncrement = measureNumberBeforeIncrement;
         samplesToWrite = new short[bufferSize];
-
     }
 
     public BarGenerator(int tempo, int sampleRate, int bufferSize) {
@@ -69,7 +68,8 @@ public class BarGenerator extends Observable {
     private void forgeNextSamples() {
         while (samplesQueue.size() < bufferSize * 3) {
             int tempoOfTheNextBar = determineTempoAndUpdateCounters();
-            fillQueue(bar.generateSamples(tempoOfTheNextBar, sampleRate));
+            short[] newSamples = bar.generateSamples(tempoOfTheNextBar, sampleRate);
+            fillQueue(newSamples);
         }
     }
 
@@ -112,7 +112,5 @@ public class BarGenerator extends Observable {
         Log.i("isIncrementPossible", "minmalBeatLength: " + minmalBeatLength + ", beatLength:" + beatLength);
         return (beatLength > minmalBeatLength);
     }
-
-
 }
 

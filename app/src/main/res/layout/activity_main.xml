@@ -137,12 +137,12 @@
 
         <EditText
             android:id="@+id/durationTimerValueId"
-            android:layout_width="20dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="number"
-            android:text="2"  />
+            android:text="60" />
 
         <TextView
             android:id="@+id/textView"
@@ -150,7 +150,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="8dp"
-            android:text="minutes" />
+            android:text="@string/seconds" />
         </LinearLayout>
 
     <Spinner

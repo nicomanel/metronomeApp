@@ -88,10 +88,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
         ArrayAdapter<Bar> adapter = new ArrayAdapter<Bar>(getApplicationContext(), R.layout.spinner_item, bars.getBars());
         rythmSpinner.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        Log.i("testadapater", "" + adapter.getCount());
-        Log.i("testadapater", "" + rythmSpinner.getSelectedItem());
-
-
     }
 
     protected void hideOrDisplaySwitchSettings(Switch switchWithSettings, View settingsView) {
@@ -119,21 +115,26 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
 
-    private void startTicking(Button startStopButton) {
+    private void startTicking(final Button startStopButton) {
 
         device = new AndroidAudioDevice();
+
         final int tempo = Integer.decode(((EditText) findViewById(R.id.tempoValueId)).getText().toString());
         final boolean increaseTempo = ((Switch) findViewById(R.id.increaseTempoSwitchId)).isChecked();
         final int tempoIncrement = Integer.decode(((EditText) findViewById(R.id.BpmIncrementId)).getText().toString());
         final int measureNumberBeforeIncrement = Integer.decode(((EditText) findViewById(R.id.barNumberValueId)).getText().toString());
 
         final boolean enableTimer = ((Switch) findViewById(R.id.timerSwitchId)).isChecked();
+        final int timerValue = Integer.decode(((EditText) findViewById(R.id.durationTimerValueId)).getText().toString());
         final boolean skipMeasure = ((Switch) findViewById(R.id.skipMeasureSwitchId)).isChecked();
         initializeBarGenerator(tempo, increaseTempo, tempoIncrement, measureNumberBeforeIncrement);
+        final MainActivity mainActivity = this;
         new Thread(new Runnable() {
+            private int writtenSamplesCounter = 0;
             @Override
             public void run() {
                 ticking = true;
+
                 Bar barToPlay = (Bar) rythmSpinner.getSelectedItem();
                 if (skipMeasure) {
                     barToPlay.forgeSilentNextBar();
@@ -141,14 +142,31 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
                 generator.setBar(barToPlay);
 
-                while (ticking) {
-                    device.writeSamples(generator.getSamples());
+                while (keepWriting()) {
+                    short[] newSamples = generator.getSamples();
+                    device.writeSamples(newSamples);
+                    writtenSamplesCounter += newSamples.length;
+                }
+
+                if (ticking) {
+                    mainActivity.stopTicking(startStopButton);
                 }
             }
+
+            private boolean keepWriting() {
+                int timerValueInSamples = (timerValue * SAMPLERATE);
+                return (ticking && !enableTimer) || ticking && (enableTimer && writtenSamplesCounter < timerValueInSamples);
+            }
+
+
         }).start();
+
     }
 
-    void initializeBarGenerator(int tempo, boolean increaseTempo, int tempoIncrement, int measureNumberBeforeIncrement) {
+    private void initializeBarGenerator(int tempo, boolean increaseTempo, int tempoIncrement, int measureNumberBeforeIncrement) {
+        if (generator != null) {
+            generator.deleteObserver(this);
+        }
         if (!increaseTempo)
             generator = new BarGenerator(tempo, SAMPLERATE, BUFFER_SIZE);
         else
@@ -156,11 +174,17 @@ public class MainActivity extends AppCompatActivity implements Observer {
         generator.addObserver(this);
     }
 
-    private void stopTicking(Button startStopButton) {
+    private void stopTicking(final Button startStopButton) {
         Log.i(this.getClass().toString(), "stopTicking()");
         ticking = false;
         device.stop();
-        startStopButton.setText("Start");
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                startStopButton.setText("Start");
+            }
+        });
+
     }
 
     public void saveBars(View view) {
@@ -207,15 +231,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
         if (increaseTempo) {
             final TextView currentTempoView = (TextView) findViewById(R.id.currentTempoId);
             this.runOnUiThread(new Runnable() {
+                private final String label = getResources().getString(R.string.currentTempoLabel);
                 @Override
                 public void run() {
-                    String label = getResources().getString(R.string.currentTempoLabel);
                     currentTempoView.setText("" + label + " " + generator.getIncrementedTempo());
                 }
             });
-
-            Log.i("update", "" + +generator.getIncrementedTempo());
-
         }
     }
 }
