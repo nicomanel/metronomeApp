@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private void intializeRythmSpinner() {
         bars = (new BarsManager(getApplicationContext())).loadBars();
         rythmSpinner = (Spinner) findViewById(R.id.rythmSpinnerId);
-        ArrayAdapter<Bar> adapter = new ArrayAdapter<Bar>(getApplicationContext(), android.R.layout.simple_spinner_item, bars.getBars());
+        ArrayAdapter<Bar> adapter = new ArrayAdapter<Bar>(getApplicationContext(), R.layout.spinner_item, bars.getBars());
         rythmSpinner.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         Log.i("testadapater", "" + adapter.getCount());
@@ -129,11 +129,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
         final boolean enableTimer = ((Switch) findViewById(R.id.timerSwitchId)).isChecked();
         final boolean skipMeasure = ((Switch) findViewById(R.id.skipMeasureSwitchId)).isChecked();
-        if (!increaseTempo)
-            generator = new BarGenerator(tempo, SAMPLERATE, BUFFER_SIZE);
-        else
-            generator = new BarGenerator(tempo, SAMPLERATE, increaseTempo, tempoIncrement, measureNumberBeforeIncrement, BUFFER_SIZE);
-        generator.addObserver(this);
+        initializeBarGenerator(tempo, increaseTempo, tempoIncrement, measureNumberBeforeIncrement);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -150,6 +146,14 @@ public class MainActivity extends AppCompatActivity implements Observer {
                 }
             }
         }).start();
+    }
+
+    void initializeBarGenerator(int tempo, boolean increaseTempo, int tempoIncrement, int measureNumberBeforeIncrement) {
+        if (!increaseTempo)
+            generator = new BarGenerator(tempo, SAMPLERATE, BUFFER_SIZE);
+        else
+            generator = new BarGenerator(tempo, SAMPLERATE, increaseTempo, tempoIncrement, measureNumberBeforeIncrement, BUFFER_SIZE);
+        generator.addObserver(this);
     }
 
     private void stopTicking(Button startStopButton) {

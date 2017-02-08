@@ -15,7 +15,7 @@ import static com.doumdoum.nmanel.metronome.DefaultSettings.SAMPLERATE;
  * Created by nico on 24/10/2016.
  */
 
-public class BarGenerator extends Observable{
+public class BarGenerator extends Observable {
     private LinkedTransferQueue<Short> samplesQueue;
     private boolean increaseTempo;
     private int tempoIncrement;
@@ -27,6 +27,7 @@ public class BarGenerator extends Observable{
     private int bufferSize;
     private Bar bar;
     private short[] samplesToWrite;
+
     public BarGenerator(int tempo, int sampleRate, boolean increaseTempo, int tempoIncrement, int measureNumberBeforeIncrement, int bufferSize) {
         samplesQueue = new LinkedTransferQueue();
         this.tempo = tempo;
@@ -66,7 +67,6 @@ public class BarGenerator extends Observable{
     }
 
     private void forgeNextSamples() {
-
         while (samplesQueue.size() < bufferSize * 3) {
             int tempoOfTheNextBar = determineTempoAndUpdateCounters();
             fillQueue(bar.generateSamples(tempoOfTheNextBar, sampleRate));
@@ -74,22 +74,16 @@ public class BarGenerator extends Observable{
     }
 
     private int determineTempoAndUpdateCounters() {
-
         if (!increaseTempo)
             return tempo;
 
         if ((measureNumberBeforeIncrement == measureCounterBeforeIncrement)) {
-            measureCounterBeforeIncrement = 1;
+            measureCounterBeforeIncrement = 0;
             if (isIncrementPossible()) {
-
                 incrementedTempo += tempoIncrement;
-
             }
-
-            Log.i("incremented tempo", "incremented tempo : " + incrementedTempo);
         } else {
             measureCounterBeforeIncrement++;
-
         }
         setChanged();
         notifyObservers();
