@@ -1,21 +1,18 @@
 package com.doumdoum.nmanel.metronome;
 
-import android.database.DataSetObserver;
-import android.media.AudioFormat;
+import android.content.Context;
 import android.media.AudioTrack;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -44,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.i("DrummerMetronome", "onCreate");
         setContentView(R.layout.activity_main);
         final Switch timerSwitch = (Switch) findViewById(R.id.timerSwitchId);
         timerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -78,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
 
         intializeRythmSpinner();
+
 
         this.ticking = false;
     }
@@ -129,6 +127,9 @@ public class MainActivity extends AppCompatActivity implements Observer {
         final boolean skipMeasure = ((Switch) findViewById(R.id.skipMeasureSwitchId)).isChecked();
         initializeBarGenerator(tempo, increaseTempo, tempoIncrement, measureNumberBeforeIncrement);
         final MainActivity mainActivity = this;
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         new Thread(new Runnable() {
             private int writtenSamplesCounter = 0;
             @Override
@@ -177,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private void stopTicking(final Button startStopButton) {
         Log.i(this.getClass().toString(), "stopTicking()");
         ticking = false;
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         device.stop();
         this.runOnUiThread(new Runnable() {
             @Override
@@ -238,5 +240,39 @@ public class MainActivity extends AppCompatActivity implements Observer {
                 }
             });
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.i("DrummerMetronome", "onStop");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("DrummerMetronome", "onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i("DrummerMetronome", "onPause");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i("DrummerMetronome", "onDestroy");
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.i("DrummerMetronome", "onRestoreInstanceState");
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        Log.i("DrummerMetronome", "onSaveInstanceState");
     }
 }
