@@ -1,9 +1,6 @@
 package com.doumdoum.nmanel.metronome;
 
-import android.content.Context;
-import android.media.AudioTrack;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -32,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private final int SAMPLERATE = 16000;
     private final int BUFFER_SIZE = 1024;
     private boolean ticking;
-    private AudioTrack track;
     private Bars bars;
     private Spinner rythmSpinner;
     private AndroidAudioDevice device;
@@ -43,6 +39,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
         super.onCreate(savedInstanceState);
         Log.i("DrummerMetronome", "onCreate");
         setContentView(R.layout.activity_main);
+        intializeSwitches();
+        intializeRythmSpinner();
+        this.ticking = false;
+    }
+
+    private void intializeSwitches() {
         final Switch timerSwitch = (Switch) findViewById(R.id.timerSwitchId);
         timerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -66,18 +68,11 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
         Switch skipSwitch = (Switch) findViewById(R.id.skipMeasureSwitchId);
         skipSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                                  @Override
-                                                  public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                                      Log.i("debug", "skipSwitch changed : " + isChecked);
-                                                  }
-                                              }
-        );
-
-
-        intializeRythmSpinner();
-
-
-        this.ticking = false;
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.i("debug", "skipSwitch changed : " + isChecked);
+            }
+        });
     }
 
     private void intializeRythmSpinner() {
@@ -106,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
         if (!ticking) {
             startTicking(startStopButton);
             startStopButton.setText("Stop");
-
             return;
         }
         stopTicking(startStopButton);
@@ -128,10 +122,11 @@ public class MainActivity extends AppCompatActivity implements Observer {
         initializeBarGenerator(tempo, increaseTempo, tempoIncrement, measureNumberBeforeIncrement);
         final MainActivity mainActivity = this;
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        disableSleepingMode();
 
         new Thread(new Runnable() {
             private int writtenSamplesCounter = 0;
+
             @Override
             public void run() {
                 ticking = true;
@@ -164,6 +159,10 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     }
 
+    private void disableSleepingMode() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
     private void initializeBarGenerator(int tempo, boolean increaseTempo, int tempoIncrement, int measureNumberBeforeIncrement) {
         if (generator != null) {
             generator.deleteObserver(this);
@@ -178,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private void stopTicking(final Button startStopButton) {
         Log.i(this.getClass().toString(), "stopTicking()");
         ticking = false;
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        enableSleepingMode();
         device.stop();
         this.runOnUiThread(new Runnable() {
             @Override
@@ -187,6 +186,10 @@ public class MainActivity extends AppCompatActivity implements Observer {
             }
         });
 
+    }
+
+    private void enableSleepingMode() {
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     public void saveBars(View view) {
@@ -234,6 +237,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
             final TextView currentTempoView = (TextView) findViewById(R.id.currentTempoId);
             this.runOnUiThread(new Runnable() {
                 private final String label = getResources().getString(R.string.currentTempoLabel);
+
                 @Override
                 public void run() {
                     currentTempoView.setText("" + label + " " + generator.getIncrementedTempo());
