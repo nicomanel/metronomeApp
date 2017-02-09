@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
             public void run() {
                 ticking = true;
 
-                Bar barToPlay = (Bar) rythmSpinner.getSelectedItem();
+                Bar barToPlay = ((Bar) rythmSpinner.getSelectedItem()).clone();
                 if (skipMeasure) {
                     barToPlay.forgeSilentNextBar();
                 }

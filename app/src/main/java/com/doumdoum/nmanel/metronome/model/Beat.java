@@ -8,24 +8,7 @@ import com.doumdoum.nmanel.metronome.SoundHelper;
 /**
  * Created by nmanel on 1/20/2017.
  */
-public class Beat {
-    public enum Style {
-        Silent(0),
-        Accent1(880),
-        Accent2(660),
-        Normal(440),
-        Ghost(220);
-
-        private int frequency;
-        Style(int i) {
-            frequency = i;
-        }
-
-        public int getFrequency() {
-            return frequency;
-        }
-    }
-
+public class Beat implements Cloneable {
     private Style beatStyle;
 
     public Beat(Style style)
@@ -33,10 +16,9 @@ public class Beat {
         beatStyle = style;
     }
 
-
     public int getSamplesCount(int tempo, int sampleRate)
     {
-        return (int) (60 * sampleRate / tempo);
+        return 60 * sampleRate / tempo;
     }
 
     public short[] generateSamples(int tempo, int sampleRate)
@@ -65,5 +47,33 @@ public class Beat {
     public String toString()
     {
         return "Beat(" + getBeatStyle().name() + ")";
+    }
+
+    public Bar clone() {
+        Bar clonedBeat = null;
+        try {
+            clonedBeat = (Bar) super.clone();
+        } catch (CloneNotSupportedException exception) {
+            Log.e("Beat", "not clonable");
+        }
+        return clonedBeat;
+    }
+
+    public enum Style {
+        Silent(0),
+        Accent1(880),
+        Accent2(660),
+        Normal(440),
+        Ghost(220);
+
+        private int frequency;
+
+        Style(int i) {
+            frequency = i;
+        }
+
+        public int getFrequency() {
+            return frequency;
+        }
     }
 }

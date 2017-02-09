@@ -66,10 +66,11 @@ public class BarGenerator extends Observable {
     }
 
     private void forgeNextSamples() {
-        while (samplesQueue.size() < bufferSize * 3) {
+        while (samplesQueue.size() < bufferSize * 10) {
             int tempoOfTheNextBar = determineTempoAndUpdateCounters();
             short[] newSamples = bar.generateSamples(tempoOfTheNextBar, sampleRate);
             fillQueue(newSamples);
+            Log.d("BarGenerator", "forging : " + samplesQueue.size());
         }
     }
 
@@ -109,7 +110,6 @@ public class BarGenerator extends Observable {
     private boolean isIncrementPossible() {
         int minmalBeatLength = SoundHelper.getMinimalBeatLength(SAMPLERATE, BEAT_LENGTH_IN_MS);
         int beatLength = bar.getBeatSamplesNumbers(incrementedTempo + tempoIncrement, SAMPLERATE);
-        Log.i("isIncrementPossible", "minmalBeatLength: " + minmalBeatLength + ", beatLength:" + beatLength);
         return (beatLength > minmalBeatLength);
     }
 }
