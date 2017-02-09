@@ -24,10 +24,11 @@ import java.io.FileOutputStream;
 import java.util.Observable;
 import java.util.Observer;
 
+import static com.doumdoum.nmanel.metronome.DefaultSettings.BUFFER_SIZE;
+import static com.doumdoum.nmanel.metronome.DefaultSettings.SAMPLERATE;
+
 
 public class MainActivity extends AppCompatActivity implements Observer {
-    private final int SAMPLERATE = 16000;
-    private final int BUFFER_SIZE = 1024;
     private boolean ticking;
     private Bars bars;
     private Spinner rythmSpinner;

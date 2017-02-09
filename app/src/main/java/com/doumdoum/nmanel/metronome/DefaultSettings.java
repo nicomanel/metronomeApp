@@ -5,6 +5,7 @@ package com.doumdoum.nmanel.metronome;
  */
 
 public interface DefaultSettings {
-    public final static int SAMPLERATE = 16000;
-    public final static int BEAT_LENGTH_IN_MS = 100;
+    int SAMPLERATE = 16000;
+    int BEAT_LENGTH_IN_MS = 100;
+    int BUFFER_SIZE = 1024;
 }
