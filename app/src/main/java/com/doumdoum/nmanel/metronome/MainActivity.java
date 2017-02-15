@@ -3,6 +3,7 @@ package com.doumdoum.nmanel.metronome;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private Spinner rythmSpinner;
     private AndroidAudioDevice device;
     private BarGenerator generator;
+    private EditText tempoEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,27 @@ public class MainActivity extends AppCompatActivity implements Observer {
         setContentView(R.layout.activity_main);
         intializeSwitches();
         intializeRythmSpinner();
+
+        tempoEditText = (EditText) findViewById(R.id.tempoValueId);
+        tempoEditText.setOnTouchListener(new View.OnTouchListener() {
+            private BpmCalculator calculator = new BpmCalculator(2000);
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    int tempo = calculator.tap(event.getEventTime());
+                    if (tempo != 0) {
+                        tempoEditText.setText("" + tempo);
+                    }
+                }
+                return false;
+            }
+        });
+
+
+
         this.ticking = false;
+        device = new AndroidAudioDevice();
     }
 
     private void intializeSwitches() {
@@ -110,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     private void startTicking(final Button startStopButton) {
 
-        device = new AndroidAudioDevice();
 
         final int tempo = Integer.decode(((EditText) findViewById(R.id.tempoValueId)).getText().toString());
         final boolean increaseTempo = ((Switch) findViewById(R.id.increaseTempoSwitchId)).isChecked();
@@ -180,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         ticking = false;
         enableSleepingMode();
         device.stop();
+
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -250,18 +272,28 @@ public class MainActivity extends AppCompatActivity implements Observer {
     @Override
     public void onStop() {
         super.onStop();
+        stopTicking();
         Log.i("DrummerMetronome", "onStop");
+    }
+
+    private void stopTicking() {
+        ticking = false;
+        device.stop();
+        Button startStopButton = (Button) findViewById(R.id.startStopButtonId);
+        startStopButton.setText("Stop");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
         Log.i("DrummerMetronome", "onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        stopTicking();
         Log.i("DrummerMetronome", "onPause");
     }
 

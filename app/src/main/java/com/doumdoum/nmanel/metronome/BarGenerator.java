@@ -59,7 +59,11 @@ public class BarGenerator extends Observable {
         }).start();
 
         for (int sampleIndex = 0; sampleIndex < bufferSize; sampleIndex++) {
-            short sample = samplesQueue.poll();
+
+            Short sample = samplesQueue.poll();
+            if (sample == null) {
+                break;
+            }
             samplesToWrite[sampleIndex] = sample;
         }
         return samplesToWrite;
