@@ -72,7 +72,7 @@
                 android:text="increase" />
             <EditText
                 android:id="@+id/BpmIncrementId"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/increaseTempoSwitchId"

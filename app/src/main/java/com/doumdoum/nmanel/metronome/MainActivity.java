@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         ticking = false;
         device.stop();
         Button startStopButton = (Button) findViewById(R.id.startStopButtonId);
-        startStopButton.setText("Stop");
+        startStopButton.setText("Start");
     }
 
     @Override
