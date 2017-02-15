@@ -23,7 +23,6 @@ public class BpmCalculator {
         firstTap = -1;
     }
 
-
     public int tap(long time) {
         int bpm = 0;
         if (firstTap < 0) {
@@ -56,6 +55,4 @@ public class BpmCalculator {
         }
         return resultBpm / tempi.length;
     }
-
-
 }

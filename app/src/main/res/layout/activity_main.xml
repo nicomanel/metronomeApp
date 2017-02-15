@@ -11,28 +11,25 @@
         android:id="@+id/tempoLayoutId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="100dp"
         android:orientation="horizontal">
-
-
-        <TextView
-            android:id="@+id/tempoLabelId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="false"
-            android:layout_centerVertical="false"
-            android:layout_weight="1"
-            android:text="Tempo :" />
-
         <EditText
             android:id="@+id/tempoValueId"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tempoLabelId"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="number"
             android:text="@string/defaultTempoValue" />
 
+
+        <Button
+            android:id="@+id/startStopButtonId"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="startStopClickAction"
+            android:text="Start" />
     </LinearLayout>
 
     <LinearLayout
@@ -47,25 +44,16 @@
             android:id="@+id/currentTempoId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:padding="8dp"
             android:text="@string/currentTempoLabel"
             android:visibility="invisible" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/startStopButtonId"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/currentTempoLayoutId"
-        android:onClick="startStopClickAction"
-        android:text="Start" />
-
     <Switch
         android:id="@+id/increaseTempoSwitchId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/startStopButtonId"
+        android:layout_below="@+id/currentTempoLayoutId"
         android:text="Increase tempo periodically" />
 
     <LinearLayout
@@ -80,10 +68,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
+
                 android:text="increase" />
             <EditText
                 android:id="@+id/BpmIncrementId"
-                android:layout_width="40dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/increaseTempoSwitchId"
