@@ -26,6 +26,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import static com.doumdoum.nmanel.metronome.DefaultSettings.BUFFER_SIZE;
+import static com.doumdoum.nmanel.metronome.DefaultSettings.MAX_TEMPO_VALUE;
 import static com.doumdoum.nmanel.metronome.DefaultSettings.SAMPLERATE;
 
 
@@ -145,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         final MainActivity mainActivity = this;
 
         disableSleepingMode();
+        device.start();
 
         new Thread(new Runnable() {
             private int writtenSamplesCounter = 0;
@@ -311,5 +313,30 @@ public class MainActivity extends AppCompatActivity implements Observer {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         Log.i("DrummerMetronome", "onSaveInstanceState");
+    }
+
+    public void increaseTempoAction(View view) {
+        EditText tempoEditor = (EditText) findViewById(R.id.tempoValueId);
+        setTempoValue(Integer.valueOf(tempoEditor.getText().toString()) + 1);
+    }
+
+    public void decreaseTempoAction(View view) {
+        EditText tempoEditor = (EditText) findViewById(R.id.tempoValueId);
+        setTempoValue(Integer.valueOf(tempoEditor.getText().toString()) - 1);
+    }
+
+    private void setTempoValue(int newValue)
+    {
+        EditText tempoEditor = (EditText) findViewById(R.id.tempoValueId);
+        if (newValue < 1)
+        {
+            tempoEditor.setText("" + 1);
+        }
+        if (newValue >= MAX_TEMPO_VALUE)
+        {
+            tempoEditor.setText("" + MAX_TEMPO_VALUE);
+        }
+
+
     }
 }

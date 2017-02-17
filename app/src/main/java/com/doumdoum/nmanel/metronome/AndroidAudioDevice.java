@@ -4,6 +4,8 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
 
+import static android.media.AudioTrack.PLAYSTATE_STOPPED;
+
 /**
  * Created by nmanel on 1/24/2017.
  */
@@ -41,5 +43,13 @@ public class AndroidAudioDevice
     {
         track.flush();
         track.stop();
+    }
+
+    public void start()
+    {
+        if (track.getPlayState() == PLAYSTATE_STOPPED)
+        {
+            track.play();
+        }
     }
 }
