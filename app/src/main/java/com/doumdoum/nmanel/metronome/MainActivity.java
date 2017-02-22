@@ -1,6 +1,7 @@
 package com.doumdoum.nmanel.metronome;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private BarGenerator generator;
     private EditText tempoEditText;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
         intializeRythmSpinner();
 
         tempoEditText = (EditText) findViewById(R.id.tempoValueId);
+
+
         tempoEditText.setOnTouchListener(new View.OnTouchListener() {
             private BpmCalculator calculator = new BpmCalculator(2000);
 
@@ -63,6 +67,10 @@ public class MainActivity extends AppCompatActivity implements Observer {
         });
 
 
+        Button increaseButton = (Button) findViewById(R.id.increaseTempoButtonId);
+        increaseButton.setOnTouchListener(new TweakTempoOnTouchListener(tempoEditText, true));
+        Button decreaseButton = (Button) findViewById(R.id.decreaseTempoButtonId);
+        decreaseButton.setOnTouchListener(new TweakTempoOnTouchListener(tempoEditText, false));
 
         this.ticking = false;
         device = new AndroidAudioDevice();
@@ -336,7 +344,5 @@ public class MainActivity extends AppCompatActivity implements Observer {
         {
             tempoEditor.setText("" + MAX_TEMPO_VALUE);
         }
-
-
     }
 }
