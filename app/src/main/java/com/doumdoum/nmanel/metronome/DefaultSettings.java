@@ -9,4 +9,7 @@ public interface DefaultSettings {
     int BEAT_LENGTH_IN_MS = 100;
     int BUFFER_SIZE = 1024;
     int MAX_TEMPO_VALUE = 400;
+    int MIN_TEMP_VALUE = 1;
+
+    int PRESS_TEMPO_CHANGE_TIME_IN_MS = 500;
 }

@@ -2,7 +2,7 @@ package com.doumdoum.nmanel.metronome.model;
 
 import android.util.Log;
 
-import com.doumdoum.nmanel.metronome.SoundHelper;
+import com.doumdoum.nmanel.metronome.MetronomeHelper;
 
 import java.util.LinkedList;
 
@@ -30,10 +30,10 @@ public class Bar implements Cloneable {
 
         for (Beat beat : beats) {
             Log.i(getClass().toString(), "generateSamples : " + beat.getBeatStyle());
-            result = SoundHelper.concatShortArrays(result, (beat.generateSamples(tempo, sampleRate)));
+            result = MetronomeHelper.concatShortArrays(result, (beat.generateSamples(tempo, sampleRate)));
         }
         if (nextBar != null) {
-            result = SoundHelper.concatShortArrays(result, (nextBar.generateSamples(tempo, sampleRate)));
+            result = MetronomeHelper.concatShortArrays(result, (nextBar.generateSamples(tempo, sampleRate)));
         }
         return result;
     }

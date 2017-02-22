@@ -113,7 +113,7 @@ public class BarGenerator extends Observable {
     }
 
     private boolean isIncrementPossible() {
-        int minmalBeatLength = SoundHelper.getMinimalBeatLength(SAMPLERATE, BEAT_LENGTH_IN_MS);
+        int minmalBeatLength = MetronomeHelper.getMinimalBeatLength(SAMPLERATE, BEAT_LENGTH_IN_MS);
         int beatLength = bar.getBeatSamplesNumbers(incrementedTempo + tempoIncrement, SAMPLERATE);
         return (beatLength > minmalBeatLength);
     }
