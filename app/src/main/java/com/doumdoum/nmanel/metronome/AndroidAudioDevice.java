@@ -15,10 +15,10 @@ public class AndroidAudioDevice
     private AudioTrack track;
     private short[] buffer = new short[1024];
 
-    public AndroidAudioDevice()
+    public AndroidAudioDevice(int sampleRate)
     {
-        int minSize =AudioTrack.getMinBufferSize( 16000, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT );
-        track = new AudioTrack( AudioManager.STREAM_MUSIC, 16000,
+        int minSize =AudioTrack.getMinBufferSize( sampleRate, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT );
+        track = new AudioTrack( AudioManager.STREAM_MUSIC, sampleRate,
                 AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT,
                 minSize, AudioTrack.MODE_STREAM);
         track.play();

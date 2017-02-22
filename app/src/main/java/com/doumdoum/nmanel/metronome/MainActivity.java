@@ -3,6 +3,8 @@ package com.doumdoum.nmanel.metronome;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,7 +51,19 @@ public class MainActivity extends AppCompatActivity implements Observer {
         intializeRythmSpinner();
 
         tempoEditText = (EditText) findViewById(R.id.tempoValueId);
+        tempoEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                stopTicking();
+                startTicking();
+            }
+        });
 
         tempoEditText.setOnTouchListener(new View.OnTouchListener() {
             private BpmCalculator calculator = new BpmCalculator(2000);
@@ -131,15 +145,19 @@ public class MainActivity extends AppCompatActivity implements Observer {
         Button startStopButton = (Button) findViewById(R.id.startStopButtonId);
 
         if (!ticking) {
-            startTicking(startStopButton);
-            startStopButton.setText("Stop");
+            startTicking();
+            startTickingUiUpdate(startStopButton);
             return;
         }
-        stopTicking(startStopButton);
+        stopTicking();
+    }
+
+    private void startTickingUiUpdate(Button startStopButton) {
+        startStopButton.setText("Stop");
     }
 
 
-    private void startTicking(final Button startStopButton) {
+    private void startTicking() {
 
 
         final int tempo = Integer.decode(((EditText) findViewById(R.id.tempoValueId)).getText().toString());
@@ -154,40 +172,9 @@ public class MainActivity extends AppCompatActivity implements Observer {
         final MainActivity mainActivity = this;
 
         disableSleepingMode();
-        device.start();
-
-        new Thread(new Runnable() {
-            private int writtenSamplesCounter = 0;
-
-            @Override
-            public void run() {
-                ticking = true;
-
-                Bar barToPlay = ((Bar) rythmSpinner.getSelectedItem()).clone();
-                if (skipMeasure) {
-                    barToPlay.forgeSilentNextBar();
-                }
-
-                generator.setBar(barToPlay);
-
-                while (keepWriting()) {
-                    short[] newSamples = generator.getSamples();
-                    device.writeSamples(newSamples);
-                    writtenSamplesCounter += newSamples.length;
-                }
-
-                if (ticking) {
-                    mainActivity.stopTicking(startStopButton);
-                }
-            }
-
-            private boolean keepWriting() {
-                int timerValueInSamples = (timerValue * SAMPLERATE);
-                return (ticking && !enableTimer) || ticking && (enableTimer && writtenSamplesCounter < timerValueInSamples);
-            }
 
 
-        }).start();
+
 
     }
 
@@ -209,16 +196,20 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private void stopTicking(final Button startStopButton) {
         Log.i(this.getClass().toString(), "stopTicking()");
         ticking = false;
-        enableSleepingMode();
         device.stop();
+        enableSleepingMode();
 
+    }
+
+
+
+    private void stopTickingUiUpdate(final Button startStopButton) {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 startStopButton.setText("Start");
             }
         });
-
     }
 
     private void enableSleepingMode() {
@@ -283,12 +274,17 @@ public class MainActivity extends AppCompatActivity implements Observer {
     public void onStop() {
         super.onStop();
         stopTicking();
+        stopTickingUiUpdate();
+
         Log.i("DrummerMetronome", "onStop");
     }
 
     private void stopTicking() {
         ticking = false;
         device.stop();
+    }
+
+    private void stopTickingUiUpdate() {
         Button startStopButton = (Button) findViewById(R.id.startStopButtonId);
         startStopButton.setText("Start");
     }
@@ -304,6 +300,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     public void onPause() {
         super.onPause();
         stopTicking();
+        stopTickingUiUpdate();
         Log.i("DrummerMetronome", "onPause");
     }
 
