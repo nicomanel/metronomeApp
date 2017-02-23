@@ -1,5 +1,6 @@
 package com.doumdoum.nmanel.metronome;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -29,6 +30,9 @@ import static com.doumdoum.nmanel.metronome.DefaultSettings.MAX_TEMPO_VALUE;
 
 
 public class MainActivity extends AppCompatActivity {
+    public static final String METRONOME_CONFIGURATION_KEY = "MetronomeConfigurationKey";
+    public static final String METRONOME_CONFIGURATION_FILE = "Metronome_test";
+    public static final String TEMPO_VALUE_KEY = "TEMPO_VALUE_KEY";
     private Bars bars;
     private Spinner rythmSpinner;
     private EditText tempoEditText;
@@ -37,12 +41,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null)
+        {
+            onRestoreInstanceState(savedInstanceState);
+        }
         Log.i("DrummerMetronome", "onCreate");
         setContentView(R.layout.activity_main);
         intializeSwitches();
         intializeRythmSpinner();
 
+
+
         tempoEditText = (EditText) findViewById(R.id.tempoValueId);
+
+
+        SharedPreferences pref = getSharedPreferences(METRONOME_CONFIGURATION_FILE, MODE_PRIVATE);
+        setEditTextFromId(R.id.tempoValueId, "" + pref.getInt(TEMPO_VALUE_KEY, Integer.valueOf(getString(R.string.defaultTempoValue)).intValue()));
+
+
         tempoEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -137,8 +153,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startStopClickAction(View view) {
-        Button startStopButton = (Button) findViewById(R.id.startStopButtonId);
-
         if (!metronomePlayer.isPlaying()) {
             startTicking();
             startTickingUiUpdate();
@@ -156,11 +170,11 @@ public class MainActivity extends AppCompatActivity {
     private void startTicking() {
         final int tempo = Integer.decode(((EditText) findViewById(R.id.tempoValueId)).getText().toString());
         final boolean increaseTempo = ((Switch) findViewById(R.id.increaseTempoSwitchId)).isChecked();
-        final int tempoIncrement = increaseTempo ? Integer.decode(((EditText) findViewById(R.id.BpmIncrementId)).getText().toString()) : 0;
-        final int measureNumberBeforeIncrement = Integer.decode(((EditText) findViewById(R.id.barNumberValueId)).getText().toString());
+        final int tempoIncrement = increaseTempo ? Integer.decode(((EditText) findViewById(R.id.tempoIncrementId)).getText().toString()) : 0;
+        final int measureNumberBeforeIncrement = Integer.decode(((EditText) findViewById(R.id.measureNumberBeforeIncrementValueId)).getText().toString());
 
         final boolean enableTimer = ((Switch) findViewById(R.id.timerSwitchId)).isChecked();
-        final int timerValue = enableTimer ? Integer.decode(((EditText) findViewById(R.id.durationTimerValueId)).getText().toString()) : 0;
+        final int timerValue = enableTimer ? Integer.decode(((EditText) findViewById(R.id.timerDurationValueId)).getText().toString()) : 0;
         final boolean skipMeasure = ((Switch) findViewById(R.id.skipMeasureSwitchId)).isChecked();
 
         disableSleepingMode();
@@ -274,6 +288,10 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         stopTickingWithUiUpdate();
+
+        SharedPreferences preferences = getSharedPreferences(METRONOME_CONFIGURATION_FILE, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(TEMPO_VALUE_KEY, extractIntegerFromTextEdit(R.id.tempoValueId));
     }
 
     @Override
@@ -284,11 +302,44 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         Log.i("DrummerMetronome", "onRestoreInstanceState");
+        MetronomeConfiguration configurationToRestore = (MetronomeConfiguration) savedInstanceState.getSerializable(METRONOME_CONFIGURATION_KEY);
+        setEditTextFromId(R.id.tempoLayoutId, "" + configurationToRestore.getTempo());
+        setEditTextFromId(R.id.tempoIncrementId, "" + configurationToRestore.getTempoIncrement());
+        setEditTextFromId(R.id.measureNumberBeforeIncrementValueId, "" + configurationToRestore.getMeasurementNumberBeforeIncrement());
+        setEditTextFromId(R.id.timerDurationValueId, "" + configurationToRestore.getTimerInSeconds());
+        setSwitchCheckedStateFromId(R.id.skipMeasureSwitchId, configurationToRestore.isSkipMeasure());
+        setSwitchCheckedStateFromId(R.id.increaseTempoSwitchId, configurationToRestore.isIncreaseTempo());
+        setSwitchCheckedStateFromId(R.id.timerSwitchId, configurationToRestore.isEnabledTimer());
+    }
+
+    private void setSwitchCheckedStateFromId(int componentId, boolean state) {
+        ((Switch) findViewById(componentId)).setChecked(state);
+    }
+
+    private void setEditTextFromId(final int componentId, String value) {
+        ((EditText) findViewById(componentId)).setText(value);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        int tempo = extractIntegerFromTextEdit(R.id.tempoValueId);
+        boolean skipMeasure = extractSwitchCheckedState(R.id.skipMeasureSwitchId);
+        boolean increaseTempo = extractSwitchCheckedState(R.id.increaseTempoSwitchId);
+        boolean enabledTimer= extractSwitchCheckedState(R.id.timerSwitchId);
+        int tempoIncrement = extractIntegerFromTextEdit(R.id.tempoIncrementId);
+        int measureNumberBeforeIncrement = extractIntegerFromTextEdit(R.id.measureNumberBeforeIncrementValueId);
+        int timerInSeconds = extractIntegerFromTextEdit(R.id.timerDurationValueId);
+        MetronomeConfiguration configurationToSave = new MetronomeConfiguration(tempo, skipMeasure, increaseTempo, enabledTimer, tempoIncrement, measureNumberBeforeIncrement, timerInSeconds);
         Log.i("DrummerMetronome", "onSaveInstanceState");
+        outState.putSerializable(METRONOME_CONFIGURATION_KEY, configurationToSave);
+    }
+
+    private boolean extractSwitchCheckedState(final int switchId) {
+        return ((Switch) findViewById(switchId)).isChecked();
+    }
+
+    private int extractIntegerFromTextEdit(final int editTextId) {
+        return Integer.valueOf(((EditText) findViewById(editTextId)).getText().toString());
     }
 
     public void increaseTempoAction(View view) {

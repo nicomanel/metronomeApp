@@ -98,7 +98,7 @@
 
                 android:text="increase" />
             <EditText
-                android:id="@+id/BpmIncrementId"
+                android:id="@+id/tempoIncrementId"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -115,7 +115,7 @@
                 android:text="BPM, every" />
 
             <EditText
-                android:id="@+id/barNumberValueId"
+                android:id="@+id/measureNumberBeforeIncrementValueId"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -152,7 +152,7 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/durationTimerValueId"
+            android:id="@+id/timerDurationValueId"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
