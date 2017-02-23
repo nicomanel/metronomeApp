@@ -23,7 +23,7 @@ public class SubDivisions {
 
     public boolean setSilentSubDivisions(int subDivisionIndex)
     {
-        setSubDivisionsState(subDivisionIndex, false);
+        return setSubDivisionsState(subDivisionIndex, false);
     }
 
     public boolean setPlayedSubDivisions(int subDivisionIndex)

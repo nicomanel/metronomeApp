@@ -1,7 +1,6 @@
 package com.doumdoum.nmanel.metronome;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,22 +24,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.FileOutputStream;
-import java.util.Observable;
-import java.util.Observer;
 
-import static com.doumdoum.nmanel.metronome.DefaultSettings.BUFFER_SIZE;
 import static com.doumdoum.nmanel.metronome.DefaultSettings.MAX_TEMPO_VALUE;
-import static com.doumdoum.nmanel.metronome.DefaultSettings.SAMPLERATE;
 
 
-public class MainActivity extends AppCompatActivity implements Observer {
-    private boolean ticking;
+public class MainActivity extends AppCompatActivity {
     private Bars bars;
     private Spinner rythmSpinner;
-    private AndroidAudioDevice device;
-    private BarGenerator generator;
     private EditText tempoEditText;
-
+    private MetronomePlayer metronomePlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +45,20 @@ public class MainActivity extends AppCompatActivity implements Observer {
         tempoEditText = (EditText) findViewById(R.id.tempoValueId);
         tempoEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
-                stopTicking();
-                startTicking();
+                if (metronomePlayer.isPlaying()) {
+                    stopTicking();
+                    startTicking();
+                    startTickingUiUpdate();
+                }
             }
         });
 
@@ -80,14 +77,13 @@ public class MainActivity extends AppCompatActivity implements Observer {
             }
         });
 
-
         Button increaseButton = (Button) findViewById(R.id.increaseTempoButtonId);
         increaseButton.setOnTouchListener(new TweakTempoOnTouchListener(tempoEditText, true));
         Button decreaseButton = (Button) findViewById(R.id.decreaseTempoButtonId);
         decreaseButton.setOnTouchListener(new TweakTempoOnTouchListener(tempoEditText, false));
 
-        this.ticking = false;
-        device = new AndroidAudioDevice();
+        metronomePlayer = new MetronomePlayer();
+
     }
 
     private void intializeSwitches() {
@@ -140,80 +136,80 @@ public class MainActivity extends AppCompatActivity implements Observer {
         }
     }
 
-
     public void startStopClickAction(View view) {
         Button startStopButton = (Button) findViewById(R.id.startStopButtonId);
 
-        if (!ticking) {
+        if (!metronomePlayer.isPlaying()) {
             startTicking();
-            startTickingUiUpdate(startStopButton);
+            startTickingUiUpdate();
             return;
         }
-        stopTicking();
+        stopTickingWithUiUpdate();
     }
 
-    private void startTickingUiUpdate(Button startStopButton) {
+    private void startTickingUiUpdate() {
+        Button startStopButton = (Button) findViewById(R.id.startStopButtonId);
         startStopButton.setText("Stop");
     }
 
 
     private void startTicking() {
-
-
         final int tempo = Integer.decode(((EditText) findViewById(R.id.tempoValueId)).getText().toString());
         final boolean increaseTempo = ((Switch) findViewById(R.id.increaseTempoSwitchId)).isChecked();
-        final int tempoIncrement = Integer.decode(((EditText) findViewById(R.id.BpmIncrementId)).getText().toString());
+        final int tempoIncrement = increaseTempo ? Integer.decode(((EditText) findViewById(R.id.BpmIncrementId)).getText().toString()) : 0;
         final int measureNumberBeforeIncrement = Integer.decode(((EditText) findViewById(R.id.barNumberValueId)).getText().toString());
 
         final boolean enableTimer = ((Switch) findViewById(R.id.timerSwitchId)).isChecked();
-        final int timerValue = Integer.decode(((EditText) findViewById(R.id.durationTimerValueId)).getText().toString());
+        final int timerValue = enableTimer ? Integer.decode(((EditText) findViewById(R.id.durationTimerValueId)).getText().toString()) : 0;
         final boolean skipMeasure = ((Switch) findViewById(R.id.skipMeasureSwitchId)).isChecked();
-        initializeBarGenerator(tempo, increaseTempo, tempoIncrement, measureNumberBeforeIncrement);
-        final MainActivity mainActivity = this;
 
         disableSleepingMode();
 
+        Bar barToPlay = ((Bar) rythmSpinner.getSelectedItem()).clone();
+        if (skipMeasure) {
+            barToPlay.forgeSilentNextBar();
+        }
+        metronomePlayer.addStopPlayingListener(new MetronomePlayerListener() {
+            @Override
+            public void metronomeHasStopped() {
+                Log.i("MainActivity", "metronomeHasStopped");
+                stopTickingUiUpdate();
+            }
 
-
-
+            @Override
+            public void tempoHasChanged() {
+                updateCurrentTempoTextView();
+            }
+        });
+        metronomePlayer.play(barToPlay, tempo, timerValue, tempoIncrement, measureNumberBeforeIncrement);
     }
 
     private void disableSleepingMode() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
-    private void initializeBarGenerator(int tempo, boolean increaseTempo, int tempoIncrement, int measureNumberBeforeIncrement) {
-        if (generator != null) {
-            generator.deleteObserver(this);
-        }
-        if (!increaseTempo)
-            generator = new BarGenerator(tempo, SAMPLERATE, BUFFER_SIZE);
-        else
-            generator = new BarGenerator(tempo, SAMPLERATE, increaseTempo, tempoIncrement, measureNumberBeforeIncrement, BUFFER_SIZE);
-        generator.addObserver(this);
-    }
-
-    private void stopTicking(final Button startStopButton) {
-        Log.i(this.getClass().toString(), "stopTicking()");
-        ticking = false;
-        device.stop();
+    private void stopTickingUiUpdate() {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (!metronomePlayer.isPlaying()) {
+                    Button startStopButton = (Button) findViewById(R.id.startStopButtonId);
+                    startStopButton.setText("Start");
+                }
+            }
+        });
         enableSleepingMode();
 
     }
 
-
-
-    private void stopTickingUiUpdate(final Button startStopButton) {
-        this.runOnUiThread(new Runnable() {
+    private void enableSleepingMode() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                startStopButton.setText("Start");
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
         });
-    }
 
-    private void enableSleepingMode() {
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     public void saveBars(View view) {
@@ -253,61 +249,36 @@ public class MainActivity extends AppCompatActivity implements Observer {
         }
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        final boolean increaseTempo = ((Switch) findViewById(R.id.increaseTempoSwitchId)).isChecked();
-
-        if (increaseTempo) {
-            final TextView currentTempoView = (TextView) findViewById(R.id.currentTempoId);
-            this.runOnUiThread(new Runnable() {
-                private final String label = getResources().getString(R.string.currentTempoLabel);
-
-                @Override
-                public void run() {
-                    currentTempoView.setText("" + label + " " + generator.getIncrementedTempo());
-                }
-            });
-        }
-    }
 
     @Override
     public void onStop() {
         super.onStop();
+        stopTickingWithUiUpdate();
+    }
+
+    private void stopTickingWithUiUpdate() {
         stopTicking();
         stopTickingUiUpdate();
-
-        Log.i("DrummerMetronome", "onStop");
     }
 
     private void stopTicking() {
-        ticking = false;
-        device.stop();
-    }
-
-    private void stopTickingUiUpdate() {
-        Button startStopButton = (Button) findViewById(R.id.startStopButtonId);
-        startStopButton.setText("Start");
+        metronomePlayer.stop();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        Log.i("DrummerMetronome", "onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        stopTicking();
-        stopTickingUiUpdate();
-        Log.i("DrummerMetronome", "onPause");
+        stopTickingWithUiUpdate();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i("DrummerMetronome", "onDestroy");
     }
 
     @Override
@@ -330,16 +301,25 @@ public class MainActivity extends AppCompatActivity implements Observer {
         setTempoValue(Integer.valueOf(tempoEditor.getText().toString()) - 1);
     }
 
-    private void setTempoValue(int newValue)
-    {
+    private void setTempoValue(int newValue) {
         EditText tempoEditor = (EditText) findViewById(R.id.tempoValueId);
-        if (newValue < 1)
-        {
+        if (newValue < 1) {
             tempoEditor.setText("" + 1);
         }
-        if (newValue >= MAX_TEMPO_VALUE)
-        {
+        if (newValue >= MAX_TEMPO_VALUE) {
             tempoEditor.setText("" + MAX_TEMPO_VALUE);
         }
+    }
+
+    private void updateCurrentTempoTextView() {
+        final TextView currentTempoView = (TextView) findViewById(R.id.currentTempoId);
+        runOnUiThread(new Runnable() {
+            private final String label = getResources().getString(R.string.currentTempoLabel);
+
+            @Override
+            public void run() {
+                currentTempoView.setText("" + label + " " + metronomePlayer.getTempo());
+            }
+        });
     }
 }
