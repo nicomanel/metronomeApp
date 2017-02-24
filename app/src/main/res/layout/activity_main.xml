@@ -98,7 +98,7 @@
 
                 android:text="increase" />
             <EditText
-                android:id="@+id/tempoIncrementId"
+                android:id="@+id/tempoIncrementValueId"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
