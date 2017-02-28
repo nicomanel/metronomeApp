@@ -1,7 +1,6 @@
 package com.doumdoum.nmanel.metronome;
 
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -22,10 +21,6 @@ import com.doumdoum.nmanel.metronome.model.Bar;
 import com.doumdoum.nmanel.metronome.model.Bars;
 import com.doumdoum.nmanel.metronome.model.BarsManager;
 import com.doumdoum.nmanel.metronome.model.Beat;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -95,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                     ((EditText) findViewById(R.id.tempoValueId)).setError("Invalid tempo value");
                     if (metronomePlayer.isPlaying())
                     {
-                        stopTicking();
+                        stopTicking(false);
                         stopTickingUiUpdate();
                     }
                     findViewById(R.id.startStopButtonId).setEnabled(false);
@@ -104,9 +99,8 @@ public class MainActivity extends AppCompatActivity {
 
                 findViewById(R.id.startStopButtonId).setEnabled(true);
                 if (metronomePlayer.isPlaying()) {
-                    stopTicking();
+                    stopTicking(false);
                     startTicking();
-                    startTickingUiUpdate();
                 }
             }
         });
@@ -202,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
     private void startTickingUiUpdate() {
         Button startStopButton = (Button) findViewById(R.id.startStopButtonId);
         startStopButton.setText("Stop");
+        disableSleepingMode();
     }
 
 
@@ -214,9 +209,6 @@ public class MainActivity extends AppCompatActivity {
         final boolean enableTimer = ((Switch) findViewById(R.id.timerSwitchId)).isChecked();
         final int timerValue = enableTimer ? Integer.decode(((EditText) findViewById(R.id.timerDurationValueId)).getText().toString()) : 0;
         final boolean skipMeasure = ((Switch) findViewById(R.id.skipMeasureSwitchId)).isChecked();
-
-        disableSleepingMode();
-
         Bar barToPlay = ((Bar) rythmSpinner.getSelectedItem()).clone();
         if (skipMeasure) {
             barToPlay.forgeSilentNextBar();
@@ -237,7 +229,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void disableSleepingMode() {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        Log.i("SLEEPING MODE", "ENABLED");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
+        });
+
     }
 
     private void stopTickingUiUpdate() {
@@ -254,6 +253,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void enableSleepingMode() {
+        Log.i("SLEEPING MODE", "DISABLED");
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -305,12 +305,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void stopTickingWithUiUpdate() {
-        stopTicking();
-        stopTickingUiUpdate();
+        stopTicking(true);
+        //stopTickingUiUpdate();
     }
 
-    private void stopTicking() {
-        metronomePlayer.stop();
+    private void stopTicking(boolean notification) {
+        metronomePlayer.stop(notification);
     }
 
     @Override

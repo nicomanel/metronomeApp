@@ -24,6 +24,7 @@ public class MetronomePlayer implements Observer {
     private boolean isPlaying;
 
     private int tempo;
+    private boolean notificationEnabled;
 
 
     public MetronomePlayer() {
@@ -45,17 +46,18 @@ public class MetronomePlayer implements Observer {
 
             }
         });
-
+        notificationEnabled = true;
         sampleRate = SAMPLERATE;
         bufferSize = BUFFER_SIZE;
         device = new AndroidAudioDevice(sampleRate);
     }
 
 
-    public void stop() {
+    public void stop(boolean notificationEnabled) {
         Log.i("MetronomePlayer", "STOP INVOKED");
         device.stop();
         isPlaying = false;
+        this.notificationEnabled = notificationEnabled;
 
         try {
             tickingThread.join();
@@ -85,7 +87,11 @@ public class MetronomePlayer implements Observer {
                     writtenSamplesCounter += newSamples.length;
                 }
                 isPlaying = false;
-                listener.metronomeHasStopped();
+                if (notificationEnabled) {
+                    listener.metronomeHasStopped();
+                }
+                notificationEnabled = true;
+
             }
 
             private boolean keepWriting() {
@@ -109,6 +115,7 @@ public class MetronomePlayer implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        Log.i("UPDATE", "UPDATe");
         tempo = ((BarGenerator) o).getIncrementedTempo();
         listener.tempoHasChanged();
     }
