@@ -1,8 +1,8 @@
 package com.doumdoum.nmanel.metronome;
 
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.ParallelExecutorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,10 +22,15 @@ import com.doumdoum.nmanel.metronome.model.Bar;
 import com.doumdoum.nmanel.metronome.model.Bars;
 import com.doumdoum.nmanel.metronome.model.BarsManager;
 import com.doumdoum.nmanel.metronome.model.Beat;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import static com.doumdoum.nmanel.metronome.DefaultSettings.MAX_TEMPO_VALUE;
 
@@ -33,14 +38,14 @@ import static com.doumdoum.nmanel.metronome.DefaultSettings.MAX_TEMPO_VALUE;
 public class MainActivity extends AppCompatActivity {
 
     public static final String METRONOME_PREFERENCE = "com.doumdoum.nmanel.metronome";
-    public static final String METRONOME_PREFERENCE_SUFFIX = METRONOME_PREFERENCE + ".";
-    public static final String KEY_TIMER_ENABLED = METRONOME_PREFERENCE_SUFFIX + "timerenabled";
-    public static final String KEY_INCREASE_TEMPO = METRONOME_PREFERENCE_SUFFIX + "increasetempo";
-    public static final String KEY_SKIP_MEASURE = METRONOME_PREFERENCE_SUFFIX + "skipmeasure";
-    public static final String KEY_TIMER_DURATION = METRONOME_PREFERENCE_SUFFIX + "timerduration";
-    public static final String KEY_MEASURE_NUMBER = METRONOME_PREFERENCE_SUFFIX + "measureNumberBeforeIncrement";
-    public static final String KEY_TEMPO_INCREMENT = METRONOME_PREFERENCE_SUFFIX + "tempoincrement";
-    public static final String KEY_TEMPO = METRONOME_PREFERENCE_SUFFIX + "tempo";
+    public static final String METRONOME_PREFERENCE_PREFIX = METRONOME_PREFERENCE + ".";
+    public static final String KEY_TIMER_ENABLED = METRONOME_PREFERENCE_PREFIX + "timerenabled";
+    public static final String KEY_INCREASE_TEMPO = METRONOME_PREFERENCE_PREFIX + "increasetempo";
+    public static final String KEY_SKIP_MEASURE = METRONOME_PREFERENCE_PREFIX + "skipmeasure";
+    public static final String KEY_TIMER_DURATION = METRONOME_PREFERENCE_PREFIX + "timerduration";
+    public static final String KEY_MEASURE_NUMBER = METRONOME_PREFERENCE_PREFIX + "measureNumberBeforeIncrement";
+    public static final String KEY_TEMPO_INCREMENT = METRONOME_PREFERENCE_PREFIX + "tempoincrement";
+    public static final String KEY_TEMPO = METRONOME_PREFERENCE_PREFIX + "tempo";
 
 
     public static final String TEMPO_VALUE_KEY = "TEMPO_VALUE_KEY";
@@ -52,15 +57,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null)
-        {
+        if (savedInstanceState != null) {
             onRestoreInstanceState(savedInstanceState);
         }
         Log.i("DrummerMetronome", "onCreate");
         setContentView(R.layout.activity_main);
         intializeSwitches();
         intializeRythmSpinner();
-
 
 
         tempoEditText = (EditText) findViewById(R.id.tempoValueId);
@@ -77,6 +80,29 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                int tempo = 0;
+                try
+                {
+                    tempo = Integer.valueOf(s.toString());
+                }
+                catch (Exception e)
+                {
+                    findViewById(R.id.startStopButtonId).setEnabled(false);
+                    return;
+                }
+                if ((tempo < 0) || (tempo > MAX_TEMPO_VALUE))
+                {
+                    ((EditText) findViewById(R.id.tempoValueId)).setError("Invalid tempo value");
+                    if (metronomePlayer.isPlaying())
+                    {
+                        stopTicking();
+                        stopTickingUiUpdate();
+                    }
+                    findViewById(R.id.startStopButtonId).setEnabled(false);
+                    return;
+                }
+
+                findViewById(R.id.startStopButtonId).setEnabled(true);
                 if (metronomePlayer.isPlaying()) {
                     stopTicking();
                     startTicking();
@@ -106,14 +132,6 @@ public class MainActivity extends AppCompatActivity {
         decreaseButton.setOnTouchListener(new TweakTempoOnTouchListener(tempoEditText, false));
 
         metronomePlayer = new MetronomePlayer();
-
-        SharedPreferences pref = getSharedPreferences(METRONOME_PREFERENCE, MODE_PRIVATE);
-
-
-
-
-
-
     }
 
     private void intializeSwitches() {
@@ -167,12 +185,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startStopClickAction(View view) {
+        checkInputs();
         if (!metronomePlayer.isPlaying()) {
             startTicking();
             startTickingUiUpdate();
             return;
         }
         stopTickingWithUiUpdate();
+    }
+
+    private boolean checkInputs() {
+
+        return true;
     }
 
     private void startTickingUiUpdate() {
@@ -227,7 +251,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         enableSleepingMode();
-
     }
 
     private void enableSleepingMode() {
@@ -237,7 +260,6 @@ public class MainActivity extends AppCompatActivity {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
         });
-
     }
 
     public void saveBars(View view) {
@@ -259,7 +281,6 @@ public class MainActivity extends AppCompatActivity {
         bar2.addBeat(new Beat(Beat.Style.Silent));
         bar.setNextBar(bar2);
 
-
         Gson gson = new GsonBuilder().create();
         String barInString = gson.toJson(bar);
 
@@ -272,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
             stream.close();
             Log.i("toto", getFileStreamPath(fileName).getAbsolutePath());
 
-        } catch (java.io.IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -280,7 +301,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
-        super.onStop();
         stopTickingWithUiUpdate();
     }
 
@@ -322,7 +342,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();   Log.i("DrummerMetronome", "onDestroy");
+        super.onDestroy();
+        Log.i("DrummerMetronome", "onDestroy");
     }
 
     @Override
@@ -395,5 +416,11 @@ public class MainActivity extends AppCompatActivity {
                 currentTempoView.setText("" + label + " " + metronomePlayer.getTempo());
             }
         });
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 }
