@@ -188,20 +188,11 @@
         android:layout_alignStart="@+id/increaseSettingsGroupId"
         android:layout_below="@+id/rythmSpinnerId"
         android:layout_marginTop="40dp"
+        android:onClick="openLoopEditor"
         android:text="ToggleButton"
         android:textOff="toto"
         android:textOn="@string/title_activity_increase_tempo" />
 
-    <ToggleButton
-        android:id="@+id/toggleButton4"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_alignEnd="@+id/increaseSettingsGroupId"
-        android:layout_alignTop="@+id/toggleButton3"
-        android:background="@drawable/toggle_selector"
-        android:text="ToggleButton"
-        android:textOff=''
-        android:textOn='' />
 
 
 </RelativeLayout>

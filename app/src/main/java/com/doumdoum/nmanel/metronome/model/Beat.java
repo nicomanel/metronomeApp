@@ -1,9 +1,12 @@
 package com.doumdoum.nmanel.metronome.model;
 
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 
 import com.doumdoum.nmanel.metronome.DefaultSettings;
 import com.doumdoum.nmanel.metronome.MetronomeHelper;
+import com.doumdoum.nmanel.metronome.R;
 
 /**
  * Created by nmanel on 1/20/2017.
@@ -60,18 +63,18 @@ public class Beat implements Cloneable {
     }
 
     public enum Style {
-        Silent(0),
-        Accent1(880),
-        Accent2(660),
-        Normal(440),
-        Ghost(220);
 
-        private int frequency;
+        Accent1(880),
+        Silent(0),
+        Normal(440),
+        Ghost(220),
+        Accent2(660),;
+
+        protected int frequency;
 
         Style(int i) {
             frequency = i;
         }
-
         public int getFrequency() {
             return frequency;
         }

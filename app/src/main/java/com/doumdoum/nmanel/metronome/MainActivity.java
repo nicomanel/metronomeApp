@@ -1,5 +1,6 @@
 package com.doumdoum.nmanel.metronome;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -301,6 +302,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
+        super.onStop();
         stopTickingWithUiUpdate();
     }
 
@@ -422,5 +424,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    public void openLoopEditor(View view) {
+        Intent intentMyAccount = new Intent(getApplicationContext(), LoopEditorActivity.class);
+        intentMyAccount.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intentMyAccount);
     }
 }
