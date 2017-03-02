@@ -1,5 +1,6 @@
 package com.doumdoum.nmanel.metronome.model;
 
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.doumdoum.nmanel.metronome.MetronomeHelper;

@@ -21,17 +21,12 @@ import android.widget.TextView;
 import com.doumdoum.nmanel.metronome.model.Bar;
 import com.doumdoum.nmanel.metronome.model.Bars;
 import com.doumdoum.nmanel.metronome.model.BarsManager;
-import com.doumdoum.nmanel.metronome.model.Beat;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import static com.doumdoum.nmanel.metronome.DefaultSettings.MAX_TEMPO_VALUE;
 
 
 public class MainActivity extends AppCompatActivity {
+    public static final String LOG = "MainActivity";
 
     public static final String METRONOME_PREFERENCE = "com.doumdoum.nmanel.metronome";
     public static final String METRONOME_PREFERENCE_PREFIX = METRONOME_PREFERENCE + ".";
@@ -59,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i("DrummerMetronome", "onCreate");
         setContentView(R.layout.activity_main);
         intializeSwitches();
-        intializeRythmSpinner();
+        intialiseRythmSpinner();
 
 
         tempoEditText = (EditText) findViewById(R.id.tempoValueId);
@@ -160,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void intializeRythmSpinner() {
+    private void intialiseRythmSpinner() {
         bars = (new BarsManager(getApplicationContext())).loadBars();
         rythmSpinner = (Spinner) findViewById(R.id.rythmSpinnerId);
         ArrayAdapter<Bar> adapter = new ArrayAdapter<Bar>(getApplicationContext(), R.layout.spinner_item, bars.getBars());
@@ -263,44 +258,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void saveBars(View view) {
-        BarsManager barsManager = new BarsManager(getApplicationContext());
-        barsManager.loadBars();
-    }
-
-
-    public void copySaveBars(View view) {
-        Bar bar = new Bar("FF");
-        bar.addBeat(new Beat(Beat.Style.Accent2));
-        bar.addBeat(new Beat(Beat.Style.Accent1));
-        bar.addBeat(new Beat(Beat.Style.Accent1));
-        bar.addBeat(new Beat(Beat.Style.Accent1));
-        Bar bar2 = new Bar("Silence");
-        bar2.addBeat(new Beat(Beat.Style.Silent));
-        bar2.addBeat(new Beat(Beat.Style.Silent));
-        bar2.addBeat(new Beat(Beat.Style.Silent));
-        bar2.addBeat(new Beat(Beat.Style.Silent));
-        bar.setNextBar(bar2);
-
-        Gson gson = new GsonBuilder().create();
-        String barInString = gson.toJson(bar);
-
-        Bar newBar = gson.fromJson(barInString, Bar.class);
-
-        try {
-            String fileName = "rythm_1.json";
-            FileOutputStream stream = openFileOutput(fileName, MODE_PRIVATE);
-            stream.write(barInString.getBytes());
-            stream.close();
-            Log.i("toto", getFileStreamPath(fileName).getAbsolutePath());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    @Override
+     @Override
     public void onStop() {
         super.onStop();
         stopTickingWithUiUpdate();
@@ -427,8 +385,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openLoopEditor(View view) {
-        Intent intentMyAccount = new Intent(getApplicationContext(), SequenceEditorActivity.class);
-        intentMyAccount.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intentMyAccount);
+        Intent intentMyAccount = new Intent(MainActivity.this, SequenceEditorActivity.class);
+        startActivityForResult(intentMyAccount, 3);
+        Log.i(LOG, "back from Sequence Editor");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(LOG, "onActivityResult " + requestCode + " : " + resultCode + " : " + data);
+        if (requestCode == 3) {
+           Log.i(LOG, "Back from sequence editor !!!!");
+            if (resultCode == RESULT_OK) {
+                intialiseRythmSpinner();
+
+
+
+
+
+            }
+        }
     }
 }

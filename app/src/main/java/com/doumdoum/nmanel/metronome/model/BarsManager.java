@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 /**
  * Created by nmanel on 1/25/2017.
@@ -18,6 +19,7 @@ import java.io.IOException;
 public class BarsManager {
     public static final String BARS_FILENAME = "bars.json";
     private Context context;
+
 
     public BarsManager(Context context) {
         this.context = context;
@@ -28,8 +30,11 @@ public class BarsManager {
         String barInString = gson.toJson(bars);
         try {
             FileOutputStream stream = context.openFileOutput(BARS_FILENAME, Context.MODE_PRIVATE);
-            stream.write(barInString.getBytes());
-            stream.close();
+            OutputStreamWriter writer = new OutputStreamWriter(stream);
+            writer.write(barInString);
+            writer.flush();
+            writer.close();
+
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
@@ -46,15 +51,13 @@ public class BarsManager {
             while ((content = stream.read()) != -1) {
                 buffer.append((char) content);
             }
-            bars = gson.fromJson(BARS_FILENAME, Bars.class);
+            bars = gson.fromJson(buffer.toString(), Bars.class);
         } catch (FileNotFoundException e) {
 
            bars = forgeDefaultBars();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.i("totototot", buffer.toString());
-        Log.i("totototo", ""+ bars);
         return bars;
     }
 
