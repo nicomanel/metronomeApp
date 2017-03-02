@@ -95,7 +95,6 @@ public class SequenceEditorActivity extends AppCompatActivity {
         BarsManager manager = new BarsManager(getApplicationContext());
         Bars bars = manager.loadBars();
         bars.addBar(bar);
-        Log.i(LOG, "bar : " + bar.toString());
         manager.saveBars(bars);
     }
 
