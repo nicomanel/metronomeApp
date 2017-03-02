@@ -427,7 +427,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openLoopEditor(View view) {
-        Intent intentMyAccount = new Intent(getApplicationContext(), LoopEditorActivity.class);
+        Intent intentMyAccount = new Intent(getApplicationContext(), SequenceEditorActivity.class);
         intentMyAccount.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intentMyAccount);
     }

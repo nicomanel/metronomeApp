@@ -13,7 +13,7 @@ import android.widget.Spinner;
 
 import java.util.LinkedList;
 
-public class LoopEditorActivity extends AppCompatActivity {
+public class SequenceEditorActivity extends AppCompatActivity {
     public static final String LOG = "Loop Editor";
     LinkedList<ImageView> beats;
     LinkedList<Drawable> drawables;
