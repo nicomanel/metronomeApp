@@ -6,6 +6,7 @@ import android.util.Log;
 import com.doumdoum.nmanel.metronome.MetronomeHelper;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class Bar implements Cloneable {
     private String name;
@@ -75,5 +76,9 @@ public class Bar implements Cloneable {
         }
 
         return clonedBar;
+    }
+
+    public List<Beat> getBeats() {
+        return beats;
     }
 }

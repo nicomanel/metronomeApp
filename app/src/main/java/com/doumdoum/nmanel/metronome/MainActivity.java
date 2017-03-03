@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import com.doumdoum.nmanel.metronome.model.Bar;
 import com.doumdoum.nmanel.metronome.model.Bars;
 import com.doumdoum.nmanel.metronome.model.BarsManager;
+import com.doumdoum.nmanel.metronome.ui.BarView;
 
 import static com.doumdoum.nmanel.metronome.DefaultSettings.MAX_TEMPO_VALUE;
 
@@ -161,6 +163,17 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<Bar> adapter = new ArrayAdapter<Bar>(getApplicationContext(), R.layout.spinner_item, bars.getBars());
         rythmSpinner.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        rythmSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ((BarView) findViewById(R.id.barViewId)).setBar((Bar) parent.getSelectedItem());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     protected void hideOrDisplaySwitchSettings(Switch switchWithSettings, View settingsView) {

@@ -170,10 +170,11 @@
         </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/rythmSelectionLayoutId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/durationTimerSettingsGroupId">
+        android:layout_below="@id/durationTimerSettingsGroupId"
+        android:orientation="horizontal">
 
         <Spinner
             android:id="@+id/rythmSpinnerId"
@@ -182,12 +183,19 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/durationTimerSettingsGroupId"
             android:layout_weight="1" />
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="+"
-            android:onClick="openLoopEditor"/>
+            android:onClick="openLoopEditor"
+            android:text="+" />
     </LinearLayout>
+
+    <com.doumdoum.nmanel.metronome.ui.BarView
+        android:id="@+id/barViewId"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_below="@+id/rythmSelectionLayoutId" />
 
 
 </RelativeLayout>
