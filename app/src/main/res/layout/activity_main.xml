@@ -15,6 +15,7 @@
         android:minHeight="100dp"
         android:orientation="horizontal"
         android:weightSum="2">
+
         <EditText
             android:id="@+id/tempoValueId"
             android:layout_width="wrap_content"
@@ -25,28 +26,31 @@
             android:text="@string/defaultTempoValue"
             android:textAlignment="center"
             android:textSize="50dp" />
-    <LinearLayout
-        android:id="@+id/changeTempoButtonsLayoutId"
-        android:layout_width="50dip"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <Button
-            android:id="@+id/increaseTempoButtonId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="increaseTempoAction"
-            android:text="+"
-            android:textSize="30dp" />
 
-        <Button
-            android:id="@+id/decreaseTempoButtonId"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/changeTempoButtonsLayoutId"
+            android:layout_width="50dip"
             android:layout_height="match_parent"
-            android:onClick="decreaseTempoAction"
-            android:text="-"
-            android:textSize="30dp" />
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/increaseTempoButtonId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="increaseTempoAction"
+                android:text="+"
+                android:textSize="30dp" />
+
+            <Button
+                android:id="@+id/decreaseTempoButtonId"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:onClick="decreaseTempoAction"
+                android:text="-"
+                android:textSize="30dp" />
+
+        </LinearLayout>
+
         <Button
             android:id="@+id/startStopButtonId"
             android:layout_width="wrap_content"
@@ -90,45 +94,48 @@
         android:layout_below="@id/increaseTempoSwitchId"
         android:layout_centerInParent="true"
         android:orientation="horizontal">
-            <TextView
-                android:id="@+id/increaseLabelId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
 
-                android:text="increase" />
-            <EditText
-                android:id="@+id/tempoIncrementValueId"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/increaseTempoSwitchId"
-                android:ems="10"
-                android:inputType="number"
-                android:text="5" />
+        <TextView
+            android:id="@+id/increaseLabelId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
 
-            <TextView
-                android:id="@+id/everyLabelId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="BPM, every" />
+            android:text="increase" />
 
-            <EditText
-                android:id="@+id/measureNumberBeforeIncrementValueId"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                android:text="@string/defaultBarNumberValue" />
+        <EditText
+            android:id="@+id/tempoIncrementValueId"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/increaseTempoSwitchId"
+            android:ems="10"
+            android:inputType="number"
+            android:text="5" />
 
-            <TextView
-                android:id="@+id/barsLabelId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="bars" />
+        <TextView
+            android:id="@+id/everyLabelId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="BPM, every" />
+
+        <EditText
+            android:id="@+id/measureNumberBeforeIncrementValueId"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number"
+            android:text="@string/defaultBarNumberValue" />
+
+        <TextView
+            android:id="@+id/barsLabelId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="bars" />
     </LinearLayout>
+
     <Switch
         android:id="@+id/skipMeasureSwitchId"
         android:layout_width="match_parent"
@@ -167,35 +174,40 @@
             android:layout_weight="1"
             android:padding="8dp"
             android:text="@string/seconds" />
-        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/rythmSelectionLayoutId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/durationTimerSettingsGroupId"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <Spinner
-            android:id="@+id/rythmSpinnerId"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/durationTimerSettingsGroupId"
-            android:layout_weight="1" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:onClick="openLoopEditor"
-            android:text="+" />
+            <Spinner
+                android:id="@+id/rythmSpinnerId"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/durationTimerSettingsGroupId"
+                android:layout_weight="1" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:onClick="openLoopEditor"
+                android:text="+" />
+        </LinearLayout>
+
+        <com.doumdoum.nmanel.metronome.ui.BarView
+            android:id="@+id/barViewId"
+            android:layout_width="match_parent"
+            android:layout_height="64dp" />
     </LinearLayout>
-
-    <com.doumdoum.nmanel.metronome.ui.BarView
-        android:id="@+id/barViewId"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_below="@+id/rythmSelectionLayoutId" />
 
 
 </RelativeLayout>

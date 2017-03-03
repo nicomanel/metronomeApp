@@ -168,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ((BarView) findViewById(R.id.barViewId)).setBar((Bar) parent.getSelectedItem());
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
