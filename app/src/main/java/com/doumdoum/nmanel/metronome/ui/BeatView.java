@@ -2,6 +2,8 @@ package com.doumdoum.nmanel.metronome.ui;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.doumdoum.nmanel.metronome.R;
@@ -16,16 +18,17 @@ import java.util.LinkedList;
  */
 
 public class BeatView extends ImageView {
+    private final static String LOG = BeatView.class.toString();
     private HashMap<Beat.Style, Drawable> styles = new HashMap<>();
     private LinkedList<Beat.Style> styleOrders;
-    private Beat.Style style;
+    private Beat beat;
+    private boolean editable;
 
 
-
-
-    public BeatView(Context context, Beat.Style style) {
+    public BeatView(Context context, Beat beat) {
         super(context);
 
+        this.beat = beat;
         styleOrders = new LinkedList<>();
         styleOrders.add(Beat.Style.Normal);
         styleOrders.add(Beat.Style.Accent1);
@@ -36,13 +39,7 @@ public class BeatView extends ImageView {
         styles.put(Beat.Style.Ghost, context.getDrawable(R.drawable.ghost_note));
         styles.put(Beat.Style.Silent, context.getDrawable(R.drawable.silent_note));
 
-        setStyle(style);
-    }
-
-    public void setStyle(Beat.Style style)
-    {
-        this.style = style;
-        setImageDrawable(styles.get(style));
+        setStyle(beat.getBeatStyle());
     }
 
     public void nextStyle()
@@ -59,6 +56,33 @@ public class BeatView extends ImageView {
 
     public Beat.Style getStyle()
     {
-        return style;
+        return beat.getBeatStyle();
+    }
+
+    public void setStyle(Beat.Style style) {
+        beat.setBeatStyle(style);
+        setImageDrawable(styles.get(style));
+    }
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+        if (editable) {
+            setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((BeatView) v).nextStyle();
+                }
+            });
+        } else {
+            setOnClickListener(null);
+        }
+    }
+
+    public Beat getBeat() {
+        return beat;
     }
 }

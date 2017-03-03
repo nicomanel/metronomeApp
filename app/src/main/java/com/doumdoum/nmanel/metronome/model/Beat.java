@@ -47,6 +47,10 @@ public class Beat implements Cloneable {
         return beatStyle;
     }
 
+    public void setBeatStyle(Beat.Style style) {
+        this.beatStyle = style;
+    }
+
     public String toString()
     {
         return "Beat(" + getBeatStyle().name() + ")";

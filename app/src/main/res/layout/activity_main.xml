@@ -188,19 +188,20 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Spinner
+            <com.doumdoum.nmanel.metronome.ui.SequencesSpinner
                 android:id="@+id/rythmSpinnerId"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/durationTimerSettingsGroupId"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textAlignment="center" />
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="48dp"
                 android:layout_height="match_parent"
                 android:onClick="openLoopEditor"
-                android:text="+" />
+                android:text="..." />
         </LinearLayout>
 
         <com.doumdoum.nmanel.metronome.ui.BarView

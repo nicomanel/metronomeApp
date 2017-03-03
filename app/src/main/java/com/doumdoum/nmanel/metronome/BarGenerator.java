@@ -107,6 +107,7 @@ public class BarGenerator extends Observable {
         initQueue();
     }
 
+
     private void initQueue() {
         samplesQueue.clear();
         forgeNextSamples();
