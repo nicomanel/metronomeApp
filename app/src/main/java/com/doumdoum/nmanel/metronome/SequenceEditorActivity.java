@@ -40,8 +40,6 @@ public class SequenceEditorActivity extends AppCompatActivity {
         ((SequencesSpinner) findViewById(R.id.sequencesSpinnerId)).setBars(bars);
 
 
-
-
         beats = new LinkedList<>();
         final LinearLayout layout = (LinearLayout) findViewById(R.id.beatsLayoutId);
         final Spinner beatsNumberSpinner = ((Spinner) findViewById(R.id.beatNumberValueId));
@@ -60,7 +58,7 @@ public class SequenceEditorActivity extends AppCompatActivity {
                         newBeatView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ((BeatView)v).nextStyle();
+                                ((BeatView) v).nextStyle();
                             }
                         });
                         newBeatView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 1));
@@ -83,12 +81,10 @@ public class SequenceEditorActivity extends AppCompatActivity {
         });
     }
 
-    private Bar forgeBar()
-    {
+    private Bar forgeBar() {
         String barName = ((EditText) findViewById(R.id.sequenceNameValueId)).getText().toString();
         Bar newBar = new Bar(barName);
-        for(BeatView view : beats)
-        {
+        for (BeatView view : beats) {
             newBar.addBeat(view.getBeat());
         }
 
@@ -130,16 +126,12 @@ public class SequenceEditorActivity extends AppCompatActivity {
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
             }
         });
 
         builder.setMessage("You are about to remove '" + barToRemove.getName() + "', Are you sure ?")
                 .setTitle("Remove a sequence");
-
         AlertDialog dialog = builder.create();
         dialog.show();
-
-
     }
 }
