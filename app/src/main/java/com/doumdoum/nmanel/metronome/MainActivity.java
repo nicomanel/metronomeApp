@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         intializeSwitches();
         intialiseRythmSpinner();
+        ((BarView) findViewById(R.id.barViewId)).setEditable(true);
 
 
         tempoEditText = (EditText) findViewById(R.id.tempoValueId);
@@ -160,11 +161,14 @@ public class MainActivity extends AppCompatActivity {
     private void intialiseRythmSpinner() {
         bars = (new BarsManager(getApplicationContext())).loadBars();
         sequencesSpinner = (SequencesSpinner) findViewById(R.id.rythmSpinnerId);
+
         sequencesSpinner.setBars(bars);
         sequencesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ((BarView) findViewById(R.id.barViewId)).setBar((Bar) parent.getSelectedItem());
+
+
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {

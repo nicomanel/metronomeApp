@@ -27,4 +27,12 @@
         <item>7</item>
     </string-array>
 
+    <string-array name="timeSignature">
+        <item>1</item>
+        <item>2</item>
+        <item>4</item>
+        <item>8</item>
+        <item>16</item>
+    </string-array>
+
 </resources>

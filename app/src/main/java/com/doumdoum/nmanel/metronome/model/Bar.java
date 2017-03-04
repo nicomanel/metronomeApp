@@ -9,9 +9,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Bar implements Cloneable {
+
+
     private String name;
     private LinkedList<Beat> beats;
     private Bar nextBar;
+
+    public Bar()
+    {
+        this.name = "";
+        beats = new LinkedList<>();
+        nextBar = null;
+
+    }
 
     public Bar(String name) {
         this.name = name;
@@ -80,5 +90,9 @@ public class Bar implements Cloneable {
 
     public List<Beat> getBeats() {
         return beats;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
