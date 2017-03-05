@@ -34,7 +34,6 @@ public class BarsManager {
             writer.write(barInString);
             writer.flush();
             writer.close();
-
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }

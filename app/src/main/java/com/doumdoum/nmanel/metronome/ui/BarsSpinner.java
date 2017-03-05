@@ -11,19 +11,22 @@ import com.doumdoum.nmanel.metronome.R;
 import com.doumdoum.nmanel.metronome.model.Bar;
 import com.doumdoum.nmanel.metronome.model.Bars;
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * Created by nmanel on 3/3/2017.
  */
 
-public class SequencesSpinner extends Spinner {
+public class BarsSpinner extends android.support.v7.widget.AppCompatSpinner implements Observer{
     private Bars bars;
 
-    public SequencesSpinner(Context context, Bars bars) {
+    public BarsSpinner(Context context, Bars bars) {
         super(context);
         setBars(bars);
     }
 
-    public SequencesSpinner(Context context, AttributeSet set) {
+    public BarsSpinner(Context context, AttributeSet set) {
         super(context, set);
     }
 
@@ -34,4 +37,8 @@ public class SequencesSpinner extends Spinner {
         adapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        setBars(bars);
+    }
 }

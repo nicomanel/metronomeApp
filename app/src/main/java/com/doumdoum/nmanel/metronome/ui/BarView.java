@@ -12,12 +12,14 @@ import com.doumdoum.nmanel.metronome.model.Beat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by nico on 03/03/17.
  */
 
-public class BarView extends LinearLayout {
+public class BarView extends LinearLayout implements Observer {
     private final static String LOG = BarView.class.toString();
     private Bar bar;
     private List<BeatView> beatViews;
@@ -69,4 +71,10 @@ public class BarView extends LinearLayout {
         }
     }
 
+
+    @Override
+    public void update(Observable o, Object arg) {
+        Log.i(LOG, "update BarView");
+        setBar(this.bar);
+    }
 }

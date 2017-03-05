@@ -1,13 +1,16 @@
 package com.doumdoum.nmanel.metronome.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * Created by nmanel on 1/25/2017.
  */
 
-public class Bars {
+public class Bars extends Observable implements Cloneable{
     private List<Bar> bars;
 
     public Bars() {
@@ -20,10 +23,12 @@ public class Bars {
 
     public void addBar(Bar bar) {
         bars.add(bar);
+        setChanged();
     }
 
     public void removeBar(Bar bar) {
         bars.remove(bar);
+        setChanged();
     }
 
     public String toString() {
@@ -50,5 +55,16 @@ public class Bars {
             }
         }
         return null;
+    }
+
+    public Bars clone() {
+        Bars clonedBars = null;
+        try {
+            clonedBars = (Bars) super.clone();
+        } catch (CloneNotSupportedException exception) {
+            Log.e("Bars", "Bar not cloneable");
+        }
+
+        return clonedBars;
     }
 }

@@ -14,6 +14,10 @@ import com.doumdoum.nmanel.metronome.R;
 public class Beat implements Cloneable {
     private Style beatStyle;
 
+    public Beat()
+    {
+        this(Style.Normal);
+    }
     public Beat(Style style)
     {
         beatStyle = style;

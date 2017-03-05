@@ -11,7 +11,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -22,7 +21,7 @@ import com.doumdoum.nmanel.metronome.model.Bar;
 import com.doumdoum.nmanel.metronome.model.Bars;
 import com.doumdoum.nmanel.metronome.model.BarsManager;
 import com.doumdoum.nmanel.metronome.ui.BarView;
-import com.doumdoum.nmanel.metronome.ui.SequencesSpinner;
+import com.doumdoum.nmanel.metronome.ui.BarsSpinner;
 
 import static com.doumdoum.nmanel.metronome.DefaultSettings.MAX_TEMPO_VALUE;
 
@@ -43,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TEMPO_VALUE_KEY = "TEMPO_VALUE_KEY";
     private Bars bars;
-    private SequencesSpinner sequencesSpinner;
+    private BarsSpinner barsSpinner;
     private EditText tempoEditText;
     private MetronomePlayer metronomePlayer;
 
@@ -160,10 +159,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void intialiseRythmSpinner() {
         bars = (new BarsManager(getApplicationContext())).loadBars();
-        sequencesSpinner = (SequencesSpinner) findViewById(R.id.rythmSpinnerId);
+        barsSpinner = (BarsSpinner) findViewById(R.id.rythmSpinnerId);
 
-        sequencesSpinner.setBars(bars);
-        sequencesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        barsSpinner.setBars(bars);
+        barsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ((BarView) findViewById(R.id.barViewId)).setBar((Bar) parent.getSelectedItem());
@@ -219,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
         final boolean enableTimer = ((Switch) findViewById(R.id.timerSwitchId)).isChecked();
         final int timerValue = enableTimer ? Integer.decode(((EditText) findViewById(R.id.timerDurationValueId)).getText().toString()) : 0;
         final boolean skipMeasure = ((Switch) findViewById(R.id.skipMeasureSwitchId)).isChecked();
-        Bar barToPlay = ((Bar) sequencesSpinner.getSelectedItem()).clone();
+        Bar barToPlay = ((Bar) barsSpinner.getSelectedItem()).clone();
         if (skipMeasure) {
             barToPlay.forgeSilentNextBar();
         }

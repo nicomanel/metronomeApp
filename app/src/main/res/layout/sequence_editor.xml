@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <com.doumdoum.nmanel.metronome.ui.SequencesSpinner
+            <com.doumdoum.nmanel.metronome.ui.BarsSpinner
                 android:id="@+id/sequencesSpinnerId"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -50,70 +50,20 @@
         android:layout_below="@id/sequencesListLayoutId"
         android:orientation="vertical">
 
-        <LinearLayout
+        <com.doumdoum.nmanel.metronome.ui.BarEditor
+            android:id="@+id/barEditorId"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="name :" />
-
-            <EditText
-                android:id="@+id/sequenceNameValueId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="text"
-                android:text="Sequence1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-
-                android:text="How many beats : " />
-
-            <Spinner
-                android:id="@+id/beatNumberValueId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:entries="@array/beatNumber" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/beatsLayoutId"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/sequencePropertiesLayoutId"
-        android:orientation="horizontal">
-
-
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <Button
         android:id="@+id/saveButtonId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/beatsLayoutId"
+        android:layout_below="@id/sequencePropertiesLayoutId"
         android:layout_weight="1"
         android:elevation="0dp"
         android:onClick="saveLoopAction"
-        android:text="Save Sequence"
-        tools:text="Save Sequence" />
+        android:text="Save Sequence"/>
 
 </RelativeLayout>

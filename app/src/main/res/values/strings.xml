@@ -27,7 +27,7 @@
         <item>7</item>
     </string-array>
 
-    <string-array name="timeSignature">
+    <string-array name="timeSignatures">
         <item>1</item>
         <item>2</item>
         <item>4</item>
