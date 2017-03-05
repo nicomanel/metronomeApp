@@ -26,7 +26,7 @@ public class EighthNoteBeatView extends AbstractBeatView {
         styleOrders.add(Beat.Style.Silent);
         styles = new HashMap<>();
         styles.put(Beat.Style.Normal, context.getDrawable(R.drawable.eighth_note));
-        styles.put(Beat.Style.Accent1, context.getDrawable(R.drawable.accented_quarter_note));
+        styles.put(Beat.Style.Accent1, context.getDrawable(R.drawable.accented_eighth_note));
         styles.put(Beat.Style.Ghost, context.getDrawable(R.drawable.ghost_eighth_note));
         styles.put(Beat.Style.Silent, context.getDrawable(R.drawable.silent_eighth_note));
     }

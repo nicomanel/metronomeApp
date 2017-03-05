@@ -26,7 +26,7 @@ public class SixteenthNoteBeatView extends AbstractBeatView {
         styleOrders.add(Beat.Style.Silent);
         styles = new HashMap<>();
         styles.put(Beat.Style.Normal, context.getDrawable(R.drawable.sixteenth_note));
-        styles.put(Beat.Style.Accent1, context.getDrawable(R.drawable.accented_quarter_note));
+        styles.put(Beat.Style.Accent1, context.getDrawable(R.drawable.accented_sixteenth_note));
         styles.put(Beat.Style.Ghost, context.getDrawable(R.drawable.ghost_sixteenth_note));
         styles.put(Beat.Style.Silent, context.getDrawable(R.drawable.silent_sixteenth_note));
     }
