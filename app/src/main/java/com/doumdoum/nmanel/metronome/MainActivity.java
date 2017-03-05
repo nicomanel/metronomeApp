@@ -407,15 +407,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i(LOG, "onActivityResult " + requestCode + " : " + resultCode + " : " + data);
         if (requestCode == 3) {
+            intialiseRythmSpinner();
            Log.i(LOG, "Back from sequence editor !!!!");
-            if (resultCode == RESULT_OK) {
-                intialiseRythmSpinner();
-
-
-
-
-
-            }
         }
     }
 }

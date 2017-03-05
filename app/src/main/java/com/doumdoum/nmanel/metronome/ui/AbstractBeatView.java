@@ -3,9 +3,7 @@ package com.doumdoum.nmanel.metronome.ui;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.widget.ImageView;
 
-import com.doumdoum.nmanel.metronome.R;
 import com.doumdoum.nmanel.metronome.model.Beat;
 
 import java.util.HashMap;
@@ -15,30 +13,23 @@ import java.util.LinkedList;
  * Created by nico on 02/03/17.
  */
 
-public class BeatView extends ImageView {
-    private final static String LOG = BeatView.class.toString();
-    private HashMap<Beat.Style, Drawable> styles = new HashMap<>();
-    private LinkedList<Beat.Style> styleOrders;
-    private Beat beat;
-    private boolean editable;
+public abstract class AbstractBeatView extends android.support.v7.widget.AppCompatImageView {
+    private final static String LOG = AbstractBeatView.class.toString();
+    protected HashMap<Beat.Style, Drawable> styles;
+    protected LinkedList<Beat.Style> styleOrders;
+    protected Beat beat;
+    protected boolean editable;
 
 
-    public BeatView(Context context, Beat beat) {
+    public AbstractBeatView(Context context, Beat beat) {
         super(context);
 
         this.beat = beat;
-        styleOrders = new LinkedList<>();
-        styleOrders.add(Beat.Style.Normal);
-        styleOrders.add(Beat.Style.Accent1);
-        styleOrders.add(Beat.Style.Ghost);
-        styleOrders.add(Beat.Style.Silent);
-        styles.put(Beat.Style.Normal, context.getDrawable(R.drawable.quarter_note));
-        styles.put(Beat.Style.Accent1, context.getDrawable(R.drawable.accented_quarter_note));
-        styles.put(Beat.Style.Ghost, context.getDrawable(R.drawable.ghost_note));
-        styles.put(Beat.Style.Silent, context.getDrawable(R.drawable.silent_quarter_note));
-
+        initStyleBindings(context);
         setStyle(beat.getBeatStyle());
     }
+
+    protected abstract void initStyleBindings(Context context);
 
     public void nextStyle()
     {
@@ -72,7 +63,7 @@ public class BeatView extends ImageView {
             setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((BeatView) v).nextStyle();
+                    ((AbstractBeatView) v).nextStyle();
                 }
             });
         } else {

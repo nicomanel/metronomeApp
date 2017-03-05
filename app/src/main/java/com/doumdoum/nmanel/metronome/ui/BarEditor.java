@@ -1,6 +1,8 @@
 package com.doumdoum.nmanel.metronome.ui;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +33,22 @@ public class BarEditor extends LinearLayout {
         barView.setEditable(true);
 
         barNameEditText = (EditText) findViewById(R.id.barNameId);
+        barNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                barToEdit.setName(s.toString());
+            }
+        });
 
 
         beatsNumberSpinner = (Spinner) findViewById(R.id.beatNumberValueId);

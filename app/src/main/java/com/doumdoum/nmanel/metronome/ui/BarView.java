@@ -1,7 +1,6 @@
 package com.doumdoum.nmanel.metronome.ui;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -22,13 +21,13 @@ import java.util.Observer;
 public class BarView extends LinearLayout implements Observer {
     private final static String LOG = BarView.class.toString();
     private Bar bar;
-    private List<BeatView> beatViews;
+    private List<AbstractBeatView> abstractBeatViews;
     private boolean editable;
 
 
     public BarView(Context context, Bar bar) {
         super(context);
-        beatViews = new ArrayList<>();
+        abstractBeatViews = new ArrayList<>();
         setEditable(false);
         setBar(bar);
 
@@ -36,7 +35,7 @@ public class BarView extends LinearLayout implements Observer {
 
     public BarView(Context context, AttributeSet set) {
         super(context, set);
-        beatViews = new ArrayList<>();
+        abstractBeatViews = new ArrayList<>();
         setEditable(false);
         setBar(new Bar("empty"));
     }
@@ -49,24 +48,42 @@ public class BarView extends LinearLayout implements Observer {
         setWeightSum(beats.size());
 
         for (Beat beat : beats) {
-            BeatView view = new BeatView(this.getContext(), beat);
+            AbstractBeatView view = createBeatView(beat);
             view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1));
             view.setEditable(editable);
-            beatViews.add(view);
+            abstractBeatViews.add(view);
             addView(view);
         }
     }
 
-    private void clearBeatViews() {
-        for (BeatView beatView : beatViews) {
-            removeView(beatView);
+    private AbstractBeatView createBeatView(Beat beat) {
+        AbstractBeatView view = null;
+        Log.i(LOG, "not to be finished");
+        switch(bar.getSignature())
+        {
+            case QuarterNote:
+                view = new QuarterNoteBeatView(this.getContext(), beat);
+                break;
+            case EighthNote:
+                view = new EighthNoteBeatView(this.getContext(), beat);
+                break;
+            case SixteenNote:
+                view = new SixteenthNoteBeatView(this.getContext(), beat);
+                break;
         }
-        beatViews.clear();
+        return view;
+    }
+
+    private void clearBeatViews() {
+        for (AbstractBeatView abstractBeatView : abstractBeatViews) {
+            removeView(abstractBeatView);
+        }
+        abstractBeatViews.clear();
     }
 
     public void setEditable(boolean editable) {
         this.editable = editable;
-        for (BeatView view : beatViews) {
+        for (AbstractBeatView view : abstractBeatViews) {
             view.setEditable(editable);
         }
     }
