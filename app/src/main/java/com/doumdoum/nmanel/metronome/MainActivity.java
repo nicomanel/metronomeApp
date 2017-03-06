@@ -20,6 +20,8 @@ import android.widget.TextView;
 import com.doumdoum.nmanel.metronome.model.Bar;
 import com.doumdoum.nmanel.metronome.model.Bars;
 import com.doumdoum.nmanel.metronome.model.BarsManager;
+import com.doumdoum.nmanel.metronome.model.Beat;
+import com.doumdoum.nmanel.metronome.ui.BarEditor;
 import com.doumdoum.nmanel.metronome.ui.BarView;
 import com.doumdoum.nmanel.metronome.ui.BarsSpinner;
 
@@ -27,7 +29,7 @@ import static com.doumdoum.nmanel.metronome.DefaultSettings.MAX_TEMPO_VALUE;
 
 
 public class MainActivity extends AppCompatActivity {
-    public static final String LOG = "MainActivity";
+    public static final String LOG = MainActivity.class.toString();
 
     public static final String METRONOME_PREFERENCE = "com.doumdoum.nmanel.metronome";
     public static final String METRONOME_PREFERENCE_PREFIX = METRONOME_PREFERENCE + ".";
@@ -38,13 +40,13 @@ public class MainActivity extends AppCompatActivity {
     public static final String KEY_MEASURE_NUMBER = METRONOME_PREFERENCE_PREFIX + "measureNumberBeforeIncrement";
     public static final String KEY_TEMPO_INCREMENT = METRONOME_PREFERENCE_PREFIX + "tempoincrement";
     public static final String KEY_TEMPO = METRONOME_PREFERENCE_PREFIX + "tempo";
-
-
     public static final String TEMPO_VALUE_KEY = "TEMPO_VALUE_KEY";
+
     private Bars bars;
     private BarsSpinner barsSpinner;
     private EditText tempoEditText;
     private MetronomePlayer metronomePlayer;
+    private Bar mainBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,16 +54,24 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             onRestoreInstanceState(savedInstanceState);
         }
-        Log.i("DrummerMetronome", "onCreate");
+
         setContentView(R.layout.activity_main);
-        intializeSwitches();
-        intialiseRythmSpinner();
-        ((BarView) findViewById(R.id.barViewId)).setEditable(true);
+        initSwitches();
+        initRythmSpinner();
+        initBarEditor();
+        initTempoEditText();
 
+        Button increaseButton = (Button) findViewById(R.id.increaseTempoButtonId);
+        increaseButton.setOnTouchListener(new TweakTempoOnTouchListener(tempoEditText, true));
+        Button decreaseButton = (Button) findViewById(R.id.decreaseTempoButtonId);
+        decreaseButton.setOnTouchListener(new TweakTempoOnTouchListener(tempoEditText, false));
 
+        metronomePlayer = new MetronomePlayer();
+
+    }
+
+    private void initTempoEditText() {
         tempoEditText = (EditText) findViewById(R.id.tempoValueId);
-
-
         tempoEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -117,16 +127,20 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        Button increaseButton = (Button) findViewById(R.id.increaseTempoButtonId);
-        increaseButton.setOnTouchListener(new TweakTempoOnTouchListener(tempoEditText, true));
-        Button decreaseButton = (Button) findViewById(R.id.decreaseTempoButtonId);
-        decreaseButton.setOnTouchListener(new TweakTempoOnTouchListener(tempoEditText, false));
-
-        metronomePlayer = new MetronomePlayer();
     }
 
-    private void intializeSwitches() {
+    private void initBarEditor() {
+        mainBar = new Bar();
+        mainBar.addBeat(new Beat(Beat.Style.Accent1));
+        mainBar.addBeat();
+        mainBar.addBeat();
+        mainBar.addBeat();
+
+        ((BarEditor) findViewById(R.id.mainActivityBarEditorId)).setBar(mainBar);
+        ((BarEditor) findViewById(R.id.mainActivityBarEditorId)).setSimpleView(true);
+    }
+
+    private void initSwitches() {
         final Switch timerSwitch = (Switch) findViewById(R.id.timerSwitchId);
         timerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -145,19 +159,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        hideOrDisplaySwitchSettings(timerSwitch, findViewById(R.id.durationTimerSettingsGroupId));
-        hideOrDisplaySwitchSettings(increaseTempoSwitch, findViewById(R.id.increaseSettingsGroupId));
-
-        Switch skipSwitch = (Switch) findViewById(R.id.skipMeasureSwitchId);
-        skipSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        final Switch sequenceSwitch = (Switch) findViewById(R.id.sequenceSelectionSwitchId);
+        sequenceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Log.i("debug", "skipSwitch changed : " + isChecked);
+                hideOrDisplaySwitchSettings(sequenceSwitch, findViewById(R.id.sequenceSelectionLayoutId));
+                if (isChecked) {
+                    findViewById(R.id.mainActivityBarEditorId).setVisibility(View.GONE);
+                } else {
+                    findViewById(R.id.mainActivityBarEditorId).setVisibility(View.VISIBLE);
+                }
             }
         });
+
+        hideOrDisplaySwitchSettings(timerSwitch, findViewById(R.id.durationTimerSettingsGroupId));
+        hideOrDisplaySwitchSettings(increaseTempoSwitch, findViewById(R.id.increaseSettingsGroupId));
+        hideOrDisplaySwitchSettings(sequenceSwitch, findViewById(R.id.sequenceSelectionLayoutId));
+
+        Switch skipSwitch = (Switch) findViewById(R.id.skipMeasureSwitchId);
     }
 
-    private void intialiseRythmSpinner() {
+    private void initRythmSpinner() {
         bars = (new BarsManager(getApplicationContext())).loadBars();
         barsSpinner = (BarsSpinner) findViewById(R.id.rythmSpinnerId);
 
@@ -165,15 +187,14 @@ public class MainActivity extends AppCompatActivity {
         barsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ((BarView) findViewById(R.id.barViewId)).setBar((Bar) parent.getSelectedItem());
-
-
+                ((BarView) findViewById(R.id.mainActivityBarViewId)).setBar((Bar) parent.getSelectedItem());
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
+        ((BarView) findViewById(R.id.mainActivityBarViewId)).setBar((Bar) barsSpinner.getSelectedItem());
     }
 
     protected void hideOrDisplaySwitchSettings(Switch switchWithSettings, View settingsView) {
@@ -218,14 +239,13 @@ public class MainActivity extends AppCompatActivity {
         final boolean enableTimer = ((Switch) findViewById(R.id.timerSwitchId)).isChecked();
         final int timerValue = enableTimer ? Integer.decode(((EditText) findViewById(R.id.timerDurationValueId)).getText().toString()) : 0;
         final boolean skipMeasure = ((Switch) findViewById(R.id.skipMeasureSwitchId)).isChecked();
-        Bar barToPlay = ((Bar) barsSpinner.getSelectedItem()).clone();
+        Bar barToPlay = mainBar.clone();
         if (skipMeasure) {
             barToPlay.forgeSilentNextBar();
         }
         metronomePlayer.addStopPlayingListener(new MetronomePlayerListener() {
             @Override
             public void metronomeHasStopped() {
-                Log.i("MainActivity", "metronomeHasStopped");
                 stopTickingUiUpdate();
             }
 
@@ -238,7 +258,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void disableSleepingMode() {
-        Log.i("SLEEPING MODE", "ENABLED");
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -262,7 +281,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void enableSleepingMode() {
-        Log.i("SLEEPING MODE", "DISABLED");
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -279,7 +297,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void stopTickingWithUiUpdate() {
         stopTicking(true);
-        //stopTickingUiUpdate();
     }
 
     private void stopTicking(boolean notification) {
@@ -290,7 +307,6 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         restorePreferences();
-
     }
 
     @Override
@@ -316,14 +332,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i("DrummerMetronome", "onDestroy");
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        Log.i("DrummerMetronome", "onRestoreInstanceState");
-
     }
 
     private void restorePreferences() {
@@ -348,7 +361,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.i("DrummerMetronome", "onSaveInstanceState");
     }
 
     private boolean extractBooleanFromSwitch(final int switchId) {
@@ -391,7 +403,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -400,15 +411,12 @@ public class MainActivity extends AppCompatActivity {
     public void openLoopEditor(View view) {
         Intent intentMyAccount = new Intent(MainActivity.this, SequenceEditorActivity.class);
         startActivityForResult(intentMyAccount, 3);
-        Log.i(LOG, "back from Sequence Editor");
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i(LOG, "onActivityResult " + requestCode + " : " + resultCode + " : " + data);
         if (requestCode == 3) {
-            intialiseRythmSpinner();
-           Log.i(LOG, "Back from sequence editor !!!!");
+            initRythmSpinner();
         }
     }
 }

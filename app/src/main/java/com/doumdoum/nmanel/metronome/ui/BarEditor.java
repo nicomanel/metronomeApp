@@ -26,13 +26,15 @@ public class BarEditor extends LinearLayout {
     private Spinner beatsNumberSpinner;
     private EditText barNameEditText;
     private Spinner timeSignatureSpinner;
+    private boolean simpleView;
+
 
     public BarEditor(Context context, AttributeSet set) {
         super(context, set);
         addView(LayoutInflater.from(context).inflate(R.layout.bar_editor, null));
-        barView = (BarView) findViewById(R.id.editorBarViewId);
+        barView = (BarView) findViewById(R.id.barViewId);
         barView.setEditable(true);
-
+        setSimpleView(false);
         barNameEditText = (EditText) findViewById(R.id.barNameId);
         barNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -147,5 +149,15 @@ public class BarEditor extends LinearLayout {
                 break;
         }
         return index;
+    }
+
+    public void setSimpleView(boolean simpleView) {
+        if (simpleView) {
+            findViewById(R.id.barNameLayoutId).setVisibility(GONE);
+            findViewById(R.id.timeSignatureLayoutId).setVisibility(GONE);
+        } else {
+            findViewById(R.id.barNameLayoutId).setVisibility(VISIBLE);
+            findViewById(R.id.timeSignatureLayoutId).setVisibility(VISIBLE);
+        }
     }
 }

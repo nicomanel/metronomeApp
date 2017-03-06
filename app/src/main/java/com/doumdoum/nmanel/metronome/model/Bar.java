@@ -11,35 +11,10 @@ import java.util.List;
 import java.util.Observable;
 
 public class Bar extends Observable implements Cloneable {
-    public enum TimeSignature {
-        WholeNote("1", 4),
-        HalfNote("2", 2),
-        QuarterNote("4", 1),
-        EighthNote("8", 1 / 2),
-        SixteenNote("16", 1 / 4);
-
-        protected String notation;
-        protected float multiplier;
-
-        TimeSignature(String notation, float multiplier) {
-            this.notation = notation;
-            this.multiplier = multiplier;
-        }
-
-        public String getNotation() {
-            return notation;
-        }
-
-        public float getMultiplier() {
-            return multiplier;
-        }
-    }
-
     private String name;
     private LinkedList<Beat> beats;
     private Bar nextBar;
     private TimeSignature signature;
-
     public Bar() {
         this("");
     }
@@ -68,6 +43,10 @@ public class Bar extends Observable implements Cloneable {
     public void addBeat(Beat beat) {
         beats.add(beat);
         setChanged();
+    }
+
+    public void addBeat() {
+        addBeat(new Beat());
     }
 
     public void removeLastBeat() {
@@ -104,6 +83,11 @@ public class Bar extends Observable implements Cloneable {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+        setChanged();
+    }
+
     public String toString() {
         return getName();
     }
@@ -135,12 +119,31 @@ public class Bar extends Observable implements Cloneable {
         return beats;
     }
 
-    public void setName(String name) {
-        this.name = name;
-        setChanged();
-    }
-
     public int getBeatsNumber() {
         return beats.size();
+    }
+
+    public enum TimeSignature {
+        WholeNote("1", 4),
+        HalfNote("2", 2),
+        QuarterNote("4", 1),
+        EighthNote("8", 1 / 2),
+        SixteenNote("16", 1 / 4);
+
+        protected String notation;
+        protected float multiplier;
+
+        TimeSignature(String notation, float multiplier) {
+            this.notation = notation;
+            this.multiplier = multiplier;
+        }
+
+        public String getNotation() {
+            return notation;
+        }
+
+        public float getMultiplier() {
+            return multiplier;
+        }
     }
 }

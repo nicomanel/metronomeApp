@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <LinearLayout
+        android:id="@+id/barNameLayoutId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -39,6 +40,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/timeSignatureLayoutId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -54,9 +56,8 @@
             android:layout_height="wrap_content"
             android:entries="@array/timeSignatures"></Spinner>
     </LinearLayout>
-
     <com.doumdoum.nmanel.metronome.ui.BarView
-        android:id ="@+id/editorBarViewId"
+        android:id="@+id/barViewId"
         android:layout_width="match_parent"
         android:layout_height="64dp" />
 

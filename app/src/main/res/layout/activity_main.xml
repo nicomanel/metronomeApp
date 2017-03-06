@@ -80,11 +80,18 @@
             android:visibility="invisible" />
     </LinearLayout>
 
+    <com.doumdoum.nmanel.metronome.ui.BarEditor
+        android:id="@+id/mainActivityBarEditorId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/currentTempoLayoutId" />
+
+
     <Switch
         android:id="@+id/increaseTempoSwitchId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/currentTempoLayoutId"
+        android:layout_below="@+id/mainActivityBarEditorId"
         android:text="Increase tempo periodically" />
 
     <LinearLayout
@@ -177,37 +184,48 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/rythmSelectionLayoutId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/durationTimerSettingsGroupId"
         android:orientation="vertical">
 
-        <LinearLayout
+        <Switch
+            android:id="@+id/sequenceSelectionSwitchId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <com.doumdoum.nmanel.metronome.ui.BarsSpinner
-                android:id="@+id/rythmSpinnerId"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/durationTimerSettingsGroupId"
-                android:layout_weight="1"
-                android:textAlignment="center" />
-
-            <Button
-                android:layout_width="48dp"
-                android:layout_height="match_parent"
-                android:onClick="openLoopEditor"
-                android:text="..." />
-        </LinearLayout>
-
-        <com.doumdoum.nmanel.metronome.ui.BarView
-            android:id="@+id/barViewId"
+            android:text="Use a sequence" />
+        <LinearLayout
+            android:id="@+id/sequenceSelectionLayoutId"
             android:layout_width="match_parent"
-            android:layout_height="64dp" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.doumdoum.nmanel.metronome.ui.BarsSpinner
+                    android:id="@+id/rythmSpinnerId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/durationTimerSettingsGroupId"
+                    android:layout_weight="1"
+                    android:textAlignment="center" />
+
+                <Button
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:onClick="openLoopEditor"
+                    android:text="..." />
+            </LinearLayout>
+
+            <com.doumdoum.nmanel.metronome.ui.BarView
+                android:id="@+id/mainActivityBarViewId"
+                android:layout_width="match_parent"
+                android:layout_height="64dp" />
+        </LinearLayout>
     </LinearLayout>
 
 
