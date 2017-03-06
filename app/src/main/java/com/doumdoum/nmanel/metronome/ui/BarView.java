@@ -58,9 +58,17 @@ public class BarView extends LinearLayout implements Observer {
 
     private AbstractBeatView createBeatView(Beat beat) {
         AbstractBeatView view = null;
-        Log.i(LOG, "not to be finished");
+
         switch(bar.getSignature())
         {
+            case WholeNote:
+                Log.i(LOG, "not to be finished WholeNote");
+                view = new QuarterNoteBeatView(this.getContext(), beat);
+                break;
+            case HalfNote:
+                Log.i(LOG, "not to be finished HalfNote");
+                view = new QuarterNoteBeatView(this.getContext(), beat);
+                break;
             case QuarterNote:
                 view = new QuarterNoteBeatView(this.getContext(), beat);
                 break;

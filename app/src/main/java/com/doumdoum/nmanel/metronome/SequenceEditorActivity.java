@@ -88,4 +88,11 @@ public class SequenceEditorActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    @Override
+    public void finish() {
+        writeToGson();
+        super.finish();
+    }
+
 }

@@ -49,6 +49,7 @@
             android:text="Time signature : " />
 
         <Spinner
+            android:id="@+id/timeSignatureSpinnerId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:entries="@array/timeSignatures"></Spinner>

@@ -13,7 +13,7 @@ import java.util.Observable;
 public class Bar extends Observable implements Cloneable {
     public enum TimeSignature {
         WholeNote("1", 4),
-        HaltNote("2", 2),
+        HalfNote("2", 2),
         QuarterNote("4", 1),
         EighthNote("8", 1 / 2),
         SixteenNote("16", 1 / 4);
@@ -62,6 +62,7 @@ public class Bar extends Observable implements Cloneable {
 
     public void setSignature(TimeSignature signature) {
         this.signature = signature;
+        setChanged();
     }
 
     public void addBeat(Beat beat) {
