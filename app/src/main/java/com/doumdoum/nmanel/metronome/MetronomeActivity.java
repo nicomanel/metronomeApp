@@ -28,8 +28,8 @@ import com.doumdoum.nmanel.metronome.ui.BarsSpinner;
 import static com.doumdoum.nmanel.metronome.DefaultSettings.MAX_TEMPO_VALUE;
 
 
-public class MainActivity extends AppCompatActivity {
-    public static final String LOG = MainActivity.class.toString();
+public class MetronomeActivity extends AppCompatActivity {
+    public static final String LOG = MetronomeActivity.class.toString();
 
     public static final String METRONOME_PREFERENCE = "com.doumdoum.nmanel.metronome";
     public static final String METRONOME_PREFERENCE_PREFIX = METRONOME_PREFERENCE + ".";
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
             onRestoreInstanceState(savedInstanceState);
         }
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_metronome);
         initSwitches();
         initRythmSpinner();
         initBarEditor();
@@ -409,7 +409,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openLoopEditor(View view) {
-        Intent intentMyAccount = new Intent(MainActivity.this, SequenceEditorActivity.class);
+        Intent intentMyAccount = new Intent(MetronomeActivity.this, BarEditorActivity.class);
         startActivityForResult(intentMyAccount, 3);
     }
 

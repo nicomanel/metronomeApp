@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="2"
+    tools:context="com.doumdoum.nmanel.metronome.BarEditorActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <com.doumdoum.nmanel.metronome.ui.BarsSpinner
+            android:id="@+id/sequencesSpinnerId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/removeSequenceButtonId"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:onClick="removeSequenceAction"
+            android:text="-" />
+
+        <Button
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:onClick="newSequenceAction"
+            android:text="+" />
+    </LinearLayout>
+
+    <com.doumdoum.nmanel.metronome.ui.BarEditor
+        android:id="@+id/barEditorId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/saveButtonId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:elevation="0dp"
+        android:onClick="saveLoopAction"
+        android:text="Save Sequence" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="createSequenceAction"
+        android:text="Create sequence" />
+
+</LinearLayout>
