@@ -18,7 +18,6 @@ public class Bar extends Observable implements Cloneable {
     public Bar() {
         this("");
     }
-
     public Bar(String name) {
         this(name, TimeSignature.QuarterNote);
     }
@@ -29,6 +28,15 @@ public class Bar extends Observable implements Cloneable {
         this.signature = signature;
         nextBar = null;
         beats = new LinkedList<>();
+    }
+
+    public Bar getNextBar() {
+        return nextBar;
+    }
+
+    public void setNextBar(Bar nextBar) {
+        this.nextBar = nextBar;
+        setChanged();
     }
 
     public TimeSignature getSignature() {
@@ -51,11 +59,6 @@ public class Bar extends Observable implements Cloneable {
 
     public void removeLastBeat() {
         beats.removeLast();
-        setChanged();
-    }
-
-    public void setNextBar(Bar nextBar) {
-        this.nextBar = nextBar;
         setChanged();
     }
 

@@ -33,23 +33,19 @@ public class SequenceEditorActivity extends AppCompatActivity {
         removeSequenceButton = (Button) findViewById(R.id.removeSequenceButtonId);
 
 
-
         sequenceNameEditText = (EditText) findViewById(R.id.sequenceEditorNameValue);
 
 
-
-
-   sequencesSpinner = (BarsSpinner) findViewById(R.id.sequencesSpinnerId);
+        sequencesSpinner = (BarsSpinner) findViewById(R.id.sequencesSpinnerId);
         sequencesSpinner.setBars(sequences);
         sequencesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (sequences.getBars().size() == 0)
-                {
+                if (sequences.getBars().size() == 0) {
                     removeSequenceButton.setEnabled(false);
                     return;
                 }
-                    removeSequenceButton.setEnabled(true);
+                removeSequenceButton.setEnabled(true);
 
                 updateSequenceEditor(parent);
             }
@@ -59,7 +55,6 @@ public class SequenceEditorActivity extends AppCompatActivity {
 
             }
         });
-
 
 
     }
@@ -79,12 +74,11 @@ public class SequenceEditorActivity extends AppCompatActivity {
     }
 
     public void removeSequenceAction(View view) {
-        sequences.removeBar((Bar)sequencesSpinner.getSelectedItem());
+        sequences.removeBar((Bar) sequencesSpinner.getSelectedItem());
     }
 
     public void createNewSequenceAction(View view) {
         Bar sequenceToEdit = new Bar();
-
 
 
     }
