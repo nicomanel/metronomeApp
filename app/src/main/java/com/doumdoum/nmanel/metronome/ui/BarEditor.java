@@ -26,7 +26,6 @@ public class BarEditor extends LinearLayout {
     private Spinner beatsNumberSpinner;
     private EditText barNameEditText;
     private Spinner timeSignatureSpinner;
-    private boolean simpleView;
 
 
     public BarEditor(Context context, AttributeSet set) {

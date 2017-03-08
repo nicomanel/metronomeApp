@@ -2,6 +2,7 @@ package com.doumdoum.nmanel.metronome;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.doumdoum.nmanel.metronome.ui.BarsSpinner;
 
 public class BarEditorActivity extends AppCompatActivity {
     public static final String LOG = BarEditorActivity.class.toString();
+    private static final int SEQUENCE_EDITOR_ACTIVITY_RETURN = 55;
     private Bars bars;
     private BarsSpinner barsSpinner;
     private BarEditor barEditor;
@@ -94,5 +96,18 @@ public class BarEditorActivity extends AppCompatActivity {
         writeToGson();
         super.finish();
     }
+
+    public void createSequenceAction(View view) {
+        Intent intentMyAccount = new Intent(BarEditorActivity.this, SequenceEditorActivity.class);
+        startActivityForResult(intentMyAccount, SEQUENCE_EDITOR_ACTIVITY_RETURN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SEQUENCE_EDITOR_ACTIVITY_RETURN) {
+
+        }
+    }
+
 
 }

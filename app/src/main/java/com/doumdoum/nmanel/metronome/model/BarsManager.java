@@ -1,6 +1,7 @@
 package com.doumdoum.nmanel.metronome.model;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -18,6 +19,7 @@ import java.io.OutputStreamWriter;
 
 public class BarsManager {
     public static final String BARS_FILENAME = "bars.json";
+    public static final String SEQUENCES_FILENAME = "sequences";
     private Context context;
 
 
@@ -25,35 +27,52 @@ public class BarsManager {
         this.context = context;
     }
 
-    public void saveBars(Bars bars) {
+    private static void saveBarsOrSequences(Bars bars, Context context, String filename) {
         Gson gson = new GsonBuilder().create();
         String barInString = gson.toJson(bars);
         try {
-            FileOutputStream stream = context.openFileOutput(BARS_FILENAME, Context.MODE_PRIVATE);
+            FileOutputStream stream = context.openFileOutput(filename, Context.MODE_PRIVATE);
             OutputStreamWriter writer = new OutputStreamWriter(stream);
             writer.write(barInString);
             writer.flush();
             writer.close();
-        } catch (java.io.IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public void saveBars(Bars bars) {
+        saveBarsOrSequences(bars, context, BARS_FILENAME);
+    }
+
+    public void saveSequences(Bars bars) {
+        saveBarsOrSequences(bars, context, SEQUENCES_FILENAME);
+    }
+
     public Bars loadBars() {
+        return loadBarsOrSequences(context, BARS_FILENAME, forgeDefaultBars());
+    }
+
+    public Bars loadSequences() {
+        return loadBarsOrSequences(context, SEQUENCES_FILENAME, forgeDefaultSequences());
+    }
+
+    private Bars forgeDefaultSequences() {
+        return new Bars();
+    }
+
+    private Bars loadBarsOrSequences(Context context, String filename, Bars defaultValue) {
         Gson gson = new GsonBuilder().create();
         StringBuffer buffer = new StringBuffer();
-        Bars bars = null;
+        Bars bars = defaultValue;
 
-        try (FileInputStream stream = context.openFileInput(BARS_FILENAME)) {
+        try (FileInputStream stream = context.openFileInput(filename)) {
 
             int content;
             while ((content = stream.read()) != -1) {
                 buffer.append((char) content);
             }
             bars = gson.fromJson(buffer.toString(), Bars.class);
-        } catch (FileNotFoundException e) {
-
-           bars = forgeDefaultBars();
         } catch (IOException e) {
             e.printStackTrace();
         }

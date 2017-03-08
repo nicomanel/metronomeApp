@@ -41,6 +41,7 @@ public class MetronomeActivity extends AppCompatActivity {
     public static final String KEY_TEMPO_INCREMENT = METRONOME_PREFERENCE_PREFIX + "tempoincrement";
     public static final String KEY_TEMPO = METRONOME_PREFERENCE_PREFIX + "tempo";
     public static final String TEMPO_VALUE_KEY = "TEMPO_VALUE_KEY";
+    public static final int BAR_EDITOR_ACTIVITY_RETURN = 3;
 
     private Bars bars;
     private BarsSpinner barsSpinner;
@@ -410,12 +411,12 @@ public class MetronomeActivity extends AppCompatActivity {
 
     public void openLoopEditor(View view) {
         Intent intentMyAccount = new Intent(MetronomeActivity.this, BarEditorActivity.class);
-        startActivityForResult(intentMyAccount, 3);
+        startActivityForResult(intentMyAccount, BAR_EDITOR_ACTIVITY_RETURN);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 3) {
+        if (requestCode == BAR_EDITOR_ACTIVITY_RETURN) {
             initRythmSpinner();
         }
     }
