@@ -71,7 +71,7 @@ public class BarGenerator extends Observable {
 
     private void forgeNextSamples() {
 
-        while (samplesQueue.size() < bufferSize * 10) {
+        while (samplesQueue.size() < bufferSize * 3) {
             int tempoOfTheNextBar = determineTempoAndUpdateCounters();
             short[] newSamples = bar.generateSamples(tempoOfTheNextBar, sampleRate);
             fillQueue(newSamples);

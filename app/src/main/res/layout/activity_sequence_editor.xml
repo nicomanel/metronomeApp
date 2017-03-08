@@ -22,19 +22,20 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:onClick="removeSequenceAction"
-            android:text="-" />
+            android:text="@string/minus_sign" />
 
         <Button
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:onClick="createNewSequenceAction"
-            android:text="+" />
+            android:text="@string/plus_sign" />
     </LinearLayout>
 
     <EditText
+        android:id="@+id/sequenceEditorNameValue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Sequence" />
+        android:text="@string/new_sequence" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,7 +43,7 @@
         android:orientation="horizontal"
         android:weightSum="1">>
 
-        <Spinner
+        <com.doumdoum.nmanel.metronome.ui.BarsSpinner
             android:id="@+id/sbarAndSequencesChoiceSpinnerId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,7 +60,7 @@
             android:onClick="addToSequenceAction" />
     </LinearLayout>
 
-    <ListView
+    <com.doumdoum.nmanel.metronome.ui.SequenceView
         android:id="@+id/sequenceListViewId"
         android:layout_width="match_parent"
         android:layout_height="316dp" />
@@ -69,5 +70,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:onClick="saveSequenceAction"
-        android:text="Save Sequence" />
+        android:text="@string/save_sequence" />
 </LinearLayout>

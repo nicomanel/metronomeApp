@@ -38,8 +38,6 @@ public class Beat implements Cloneable {
 
     private void fillSamples(final short[] samples, int sampleRate) {
         short[] soundSamples = MetronomeHelper.generatePureSound(sampleRate, DefaultSettings.BEAT_LENGTH_IN_MS, beatStyle.getFrequency());
-        Log.i("samples", "samples : " + samples.length);
-        Log.i("samples", "soundSamples : " + soundSamples.length);
         for(int sampleIndex = 0; sampleIndex < soundSamples.length; sampleIndex++)
         {
             samples[sampleIndex] = soundSamples[sampleIndex];

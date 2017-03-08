@@ -96,7 +96,6 @@ public class MetronomePlayer implements Observer {
 
             private boolean keepWriting() {
                 int timerValueInSamples = (timerValue * SAMPLERATE);
-                Log.i("MetronomePlayer", "Keepwriting : " + writtenSamplesCounter + "<" + timerValueInSamples);
                 boolean enabledTimerCondition = (timerValueInSamples > 0) && (writtenSamplesCounter < timerValueInSamples);
                 boolean disabledTimerCondition = (timerValueInSamples == 0) && isPlaying();
                 return disabledTimerCondition || enabledTimerCondition;
