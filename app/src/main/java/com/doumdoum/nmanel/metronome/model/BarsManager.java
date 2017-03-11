@@ -19,7 +19,6 @@ import java.io.OutputStreamWriter;
 
 public class BarsManager {
     public static final String BARS_FILENAME = "bars.json";
-    public static final String SEQUENCES_FILENAME = "sequences";
     private Context context;
 
 
@@ -41,24 +40,27 @@ public class BarsManager {
         }
     }
 
+    public static void removeObserversFromBars(Bars bars) {
+        bars.deleteObservers();
+        for (Bar barToProcess : bars.getBars()) {
+            removeObserversFromBar(barToProcess);
+        }
+    }
+
+    public static void removeObserversFromBar(Bar bar) {
+        Bar toRemove = bar;
+        while (toRemove != null) {
+            toRemove.deleteObservers();
+            toRemove = toRemove.getNextBar();
+        }
+    }
+
     public void saveBars(Bars bars) {
         saveBarsOrSequences(bars, context, BARS_FILENAME);
     }
 
-    public void saveSequences(Bars bars) {
-        saveBarsOrSequences(bars, context, SEQUENCES_FILENAME);
-    }
-
     public Bars loadBars() {
         return loadBarsOrSequences(context, BARS_FILENAME, forgeDefaultBars());
-    }
-
-    public Bars loadSequences() {
-        return loadBarsOrSequences(context, SEQUENCES_FILENAME, forgeDefaultSequences());
-    }
-
-    private Bars forgeDefaultSequences() {
-        return new Bars();
     }
 
     private Bars loadBarsOrSequences(Context context, String filename, Bars defaultValue) {

@@ -1,5 +1,7 @@
 package com.doumdoum.nmanel.metronome.model;
 
+import android.util.Log;
+
 import java.util.Observable;
 
 /**
@@ -7,6 +9,7 @@ import java.util.Observable;
  */
 
 public class Sequence extends Observable {
+    private final static String LOG = Sequence.class.toString();
     private Bar bars;
     private String name;
     private int tempo;
@@ -27,7 +30,6 @@ public class Sequence extends Observable {
     }
 
     public void addBar(Bar bar) {
-
         if (bars == null) {
             bars = bar;
         }
@@ -40,8 +42,28 @@ public class Sequence extends Observable {
         setChanged();
     }
 
-    public void replaceBar(Bar barToReplace, bar replacedBy) {
+    public void replaceBar(Bar barToReplace, Bar replacedBy) {
+        Bar containingBar = findContainingBar(bars, barToReplace);
+        if (containingBar == null) {
+            Log.i(LOG, "replaceBar : Bar not found");
+            return;
+        }
 
+        containingBar.setNextBar(replacedBy);
+        replacedBy.setNextBar(barToReplace.getNextBar());
+        setChanged();
+    }
+
+    private Bar findContainingBar(Bar bars, Bar barToReplace) {
+        Bar containingBar = bars.getNextBar();
+        while (containingBar.getNextBar() == barToReplace) {
+            containingBar = containingBar.getNextBar();
+        }
+        return containingBar;
+    }
+
+    public Bar getBars() {
+        return bars;
     }
 
 }
