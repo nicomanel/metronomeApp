@@ -10,12 +10,16 @@ import android.widget.EditText;
 import com.doumdoum.nmanel.metronome.model.Bar;
 import com.doumdoum.nmanel.metronome.model.Bars;
 import com.doumdoum.nmanel.metronome.model.BarsManager;
+import com.doumdoum.nmanel.metronome.model.Sequence;
+import com.doumdoum.nmanel.metronome.model.Sequences;
+import com.doumdoum.nmanel.metronome.model.SequencesManager;
 import com.doumdoum.nmanel.metronome.ui.BarsSpinner;
 import com.doumdoum.nmanel.metronome.ui.SequenceView;
+import com.doumdoum.nmanel.metronome.ui.SequencesSpinner;
 
 public class SequenceEditorActivity extends AppCompatActivity {
-    private BarsSpinner sequencesSpinner;
-    private Bars sequences;
+    private SequencesSpinner sequencesSpinner;
+    private Sequences sequences;
     private Bar sequenceToEdit;
     private Button removeSequenceButton;
     private SequenceView sequenceView;
@@ -28,7 +32,7 @@ public class SequenceEditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sequence_editor);
 
 
-        sequences = (new BarsManager(getApplicationContext())).loadSequences();
+        sequences = (new SequencesManager(getApplicationContext())).loadSequences();
 
         removeSequenceButton = (Button) findViewById(R.id.removeSequenceButtonId);
 
@@ -36,12 +40,12 @@ public class SequenceEditorActivity extends AppCompatActivity {
         sequenceNameEditText = (EditText) findViewById(R.id.sequenceEditorNameValue);
 
 
-        sequencesSpinner = (BarsSpinner) findViewById(R.id.sequencesSpinnerId);
-        sequencesSpinner.setBars(sequences);
+        sequencesSpinner = (SequencesSpinner) findViewById(R.id.sequencesSpinnerId);
+        sequencesSpinner.setSequences(sequences);
         sequencesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (sequences.getBars().size() == 0) {
+                if (sequences.getSequences().size() == 0) {
                     removeSequenceButton.setEnabled(false);
                     return;
                 }
@@ -60,8 +64,8 @@ public class SequenceEditorActivity extends AppCompatActivity {
     }
 
     protected void updateSequenceEditor(AdapterView<?> parent) {
-        Bar selectedItem = (Bar) parent.getSelectedItem();
-        sequenceView.setBar(selectedItem);
+        Sequence selectedItem = (Sequence) parent.getSelectedItem();
+        sequenceView.setSequence(selectedItem);
         sequenceNameEditText.setText(selectedItem.getName());
 
     }
@@ -74,7 +78,7 @@ public class SequenceEditorActivity extends AppCompatActivity {
     }
 
     public void removeSequenceAction(View view) {
-        sequences.removeBar((Bar) sequencesSpinner.getSelectedItem());
+        sequences.removeSequence((Sequence) sequencesSpinner.getSelectedItem());
     }
 
     public void createNewSequenceAction(View view) {

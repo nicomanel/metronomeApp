@@ -18,6 +18,10 @@ public class SequencesManager {
     public static final String SEQUENCES_FILENAME = "sequences.json";
     private Context context;
 
+    public SequencesManager(Context context) {
+        this.context = context;
+    }
+
     public void saveSequences(Sequences sequences) {
         Gson gson = new GsonBuilder().create();
         String barInString = gson.toJson(cloneAndRemoveObserver(sequences));

@@ -13,11 +13,14 @@ public class Sequence extends Observable {
     private Bar bars;
     private String name;
     private int tempo;
-
     public Sequence(String name) {
         bars = null;
         this.name = name;
         setChanged();
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int getTempo() {
