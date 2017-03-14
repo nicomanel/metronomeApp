@@ -16,13 +16,13 @@
         android:weightSum="1">
 
         <com.doumdoum.nmanel.metronome.ui.BarsSpinner
-            android:id="@+id/sequencesSpinnerId"
+            android:id="@+id/barsSpinnerId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/removeSequenceButtonId"
+            android:id="@+id/removeBarButtonId"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:onClick="removeSequenceAction"

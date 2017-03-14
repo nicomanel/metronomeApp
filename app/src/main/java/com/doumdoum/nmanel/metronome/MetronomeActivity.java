@@ -42,7 +42,7 @@ public class MetronomeActivity extends AppCompatActivity {
     public static final String KEY_TEMPO_INCREMENT = METRONOME_PREFERENCE_PREFIX + "tempoincrement";
     public static final String KEY_TEMPO = METRONOME_PREFERENCE_PREFIX + "tempo";
     public static final String TEMPO_VALUE_KEY = "TEMPO_VALUE_KEY";
-    public static final int BAR_EDITOR_ACTIVITY_RETURN = 3;
+    public static final int SEQUENCE_EDITOR_ACTIVITY_RETURN = 3;
 
     private Sequences sequences;
     private SequencesSpinner sequencesSpinner;
@@ -423,14 +423,14 @@ public class MetronomeActivity extends AppCompatActivity {
         super.onStart();
     }
 
-    public void openLoopEditor(View view) {
-        Intent intentMyAccount = new Intent(MetronomeActivity.this, BarEditorActivity.class);
-        startActivityForResult(intentMyAccount, BAR_EDITOR_ACTIVITY_RETURN);
+    public void openSequenceEditorAction(View view) {
+        Intent intentMyAccount = new Intent(MetronomeActivity.this, SequenceEditorActivity.class);
+        startActivityForResult(intentMyAccount, SEQUENCE_EDITOR_ACTIVITY_RETURN);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == BAR_EDITOR_ACTIVITY_RETURN) {
+        if (requestCode == SEQUENCE_EDITOR_ACTIVITY_RETURN) {
             initSequencesSpinner();
         }
     }

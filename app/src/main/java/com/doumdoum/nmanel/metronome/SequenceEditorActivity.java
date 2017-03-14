@@ -8,12 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.doumdoum.nmanel.metronome.model.Bar;
-import com.doumdoum.nmanel.metronome.model.Bars;
-import com.doumdoum.nmanel.metronome.model.BarsManager;
 import com.doumdoum.nmanel.metronome.model.Sequence;
 import com.doumdoum.nmanel.metronome.model.Sequences;
 import com.doumdoum.nmanel.metronome.model.SequencesManager;
-import com.doumdoum.nmanel.metronome.ui.BarsSpinner;
 import com.doumdoum.nmanel.metronome.ui.SequenceView;
 import com.doumdoum.nmanel.metronome.ui.SequencesSpinner;
 
@@ -31,16 +28,13 @@ public class SequenceEditorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sequence_editor);
 
-
         sequences = (new SequencesManager(getApplicationContext())).loadSequences();
 
-        removeSequenceButton = (Button) findViewById(R.id.removeSequenceButtonId);
+        removeSequenceButton = (Button) findViewById(R.id.removeBarButtonId);
 
+        sequenceNameEditText = (EditText) findViewById(R.id.sequenceEditorNameValueId);
 
-        sequenceNameEditText = (EditText) findViewById(R.id.sequenceEditorNameValue);
-
-
-        sequencesSpinner = (SequencesSpinner) findViewById(R.id.sequencesSpinnerId);
+        sequencesSpinner = (SequencesSpinner) findViewById(R.id.sequencesEditorSpinnerId);
         sequencesSpinner.setSequences(sequences);
         sequencesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -51,7 +45,7 @@ public class SequenceEditorActivity extends AppCompatActivity {
                 }
                 removeSequenceButton.setEnabled(true);
 
-                updateSequenceEditor(parent);
+//                updateSequenceEditor(parent);
             }
 
             @Override
@@ -59,15 +53,12 @@ public class SequenceEditorActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     protected void updateSequenceEditor(AdapterView<?> parent) {
         Sequence selectedItem = (Sequence) parent.getSelectedItem();
         sequenceView.setSequence(selectedItem);
         sequenceNameEditText.setText(selectedItem.getName());
-
     }
 
     public void saveSequenceAction(View view) {
@@ -83,6 +74,8 @@ public class SequenceEditorActivity extends AppCompatActivity {
 
     public void createNewSequenceAction(View view) {
         Bar sequenceToEdit = new Bar();
+        Sequence sequence = new Sequence("New Sequence");
+        sequences.addSequence(sequence);
 
 
     }

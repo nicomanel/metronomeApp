@@ -13,18 +13,21 @@
         android:orientation="horizontal"
         android:weightSum="1">
 
-        <Spinner
+        <com.doumdoum.nmanel.metronome.ui.SequencesSpinner
+            android:id="@+id/sequencesEditorSpinnerId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <Button
+            android:id="@+id/removeBarButtonId"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:onClick="removeSequenceAction"
             android:text="@string/minus_sign" />
 
         <Button
+            android:id="@+id/createNewSequenceButtonId"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:onClick="createNewSequenceAction"
@@ -32,38 +35,12 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/sequenceEditorNameValue"
+        android:id="@+id/sequenceEditorNameValueId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/new_sequence" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1">>
 
-        <com.doumdoum.nmanel.metronome.ui.BarsSpinner
-            android:id="@+id/sbarAndSequencesChoiceSpinnerId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Spinner
-            android:id="@+id/iterationNumberSpinnerId"
-            android:layout_width="48dp"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:layout_width="48dp"
-            android:layout_height="wrap_content"
-            android:onClick="addToSequenceAction" />
-    </LinearLayout>
-
-    <com.doumdoum.nmanel.metronome.ui.SequenceView
-        android:id="@+id/sequenceListViewId"
-        android:layout_width="match_parent"
-        android:layout_height="316dp" />
 
     <Button
         style="@style/Widget.AppCompat.Button"
