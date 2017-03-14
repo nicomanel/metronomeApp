@@ -18,12 +18,13 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.doumdoum.nmanel.metronome.model.Bar;
-import com.doumdoum.nmanel.metronome.model.Bars;
-import com.doumdoum.nmanel.metronome.model.BarsManager;
 import com.doumdoum.nmanel.metronome.model.Beat;
+import com.doumdoum.nmanel.metronome.model.Sequence;
+import com.doumdoum.nmanel.metronome.model.Sequences;
+import com.doumdoum.nmanel.metronome.model.SequencesManager;
 import com.doumdoum.nmanel.metronome.ui.BarEditor;
-import com.doumdoum.nmanel.metronome.ui.BarView;
-import com.doumdoum.nmanel.metronome.ui.BarsSpinner;
+import com.doumdoum.nmanel.metronome.ui.SequenceView;
+import com.doumdoum.nmanel.metronome.ui.SequencesSpinner;
 
 import static com.doumdoum.nmanel.metronome.DefaultSettings.MAX_TEMPO_VALUE;
 
@@ -43,8 +44,8 @@ public class MetronomeActivity extends AppCompatActivity {
     public static final String TEMPO_VALUE_KEY = "TEMPO_VALUE_KEY";
     public static final int BAR_EDITOR_ACTIVITY_RETURN = 3;
 
-    private Bars bars;
-    private BarsSpinner barsSpinner;
+    private Sequences sequences;
+    private SequencesSpinner sequencesSpinner;
     private EditText tempoEditText;
     private MetronomePlayer metronomePlayer;
     private Bar mainBar;
@@ -58,7 +59,7 @@ public class MetronomeActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_metronome);
         initSwitches();
-        initRythmSpinner();
+        initSequencesSpinner();
         initBarEditor();
         initTempoEditText();
 
@@ -180,22 +181,22 @@ public class MetronomeActivity extends AppCompatActivity {
         Switch skipSwitch = (Switch) findViewById(R.id.skipMeasureSwitchId);
     }
 
-    private void initRythmSpinner() {
-        bars = (new BarsManager(getApplicationContext())).loadBars();
-        barsSpinner = (BarsSpinner) findViewById(R.id.rythmSpinnerId);
+    private void initSequencesSpinner() {
+        sequences = (new SequencesManager(getApplicationContext())).loadSequences();
+        sequencesSpinner = (SequencesSpinner) findViewById(R.id.sequencesSpinnerId);
 
-        barsSpinner.setBars(bars);
-        barsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        sequencesSpinner.setSequences(sequences);
+        sequencesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ((BarView) findViewById(R.id.mainActivityBarViewId)).setBar((Bar) parent.getSelectedItem());
+                ((SequenceView) findViewById(R.id.mainActivitySequenceViewId)).setSequence((Sequence) parent.getSelectedItem());
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
-        ((BarView) findViewById(R.id.mainActivityBarViewId)).setBar((Bar) barsSpinner.getSelectedItem());
+        ((SequenceView) findViewById(R.id.mainActivitySequenceViewId)).setSequence((Sequence) sequencesSpinner.getSelectedItem());
     }
 
     protected void hideOrDisplaySwitchSettings(Switch switchWithSettings, View settingsView) {
@@ -417,7 +418,7 @@ public class MetronomeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == BAR_EDITOR_ACTIVITY_RETURN) {
-            initRythmSpinner();
+            initSequencesSpinner();
         }
     }
 }

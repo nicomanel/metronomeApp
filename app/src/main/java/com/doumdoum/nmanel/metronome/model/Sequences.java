@@ -31,7 +31,6 @@ public class Sequences extends Observable implements Cloneable {
 
         }
         return clone;
-
     }
 
     public List<Sequence> getSequences() {

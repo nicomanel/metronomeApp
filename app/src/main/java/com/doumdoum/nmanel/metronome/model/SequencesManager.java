@@ -43,7 +43,6 @@ public class SequencesManager {
         for (Sequence sequence : clone.getSequences()) {
             sequence.deleteObservers();
             BarsManager.removeObserversFromBar(sequence.getBars());
-
         }
         return clone;
 
@@ -68,6 +67,22 @@ public class SequencesManager {
     }
 
     private Sequences forgeDefaultSequences() {
-        return new Sequences();
+        Sequences sequences = new Sequences();
+        Sequence sequence = new Sequence("4 / 4 * 3 + 3 / 4");
+        Bar bar = new Bar("4 / 4");
+        bar.addBeat(new Beat(Beat.Style.Silent));
+        bar.addBeat(new Beat(Beat.Style.Accent1));
+        bar.addBeat(new Beat(Beat.Style.Silent));
+        bar.addBeat(new Beat(Beat.Style.Accent1));
+        sequence.addBar(bar);
+        sequence.addBar(bar);
+        sequence.addBar(bar);
+        bar = new Bar("3 / 4");
+        bar.addBeat(new Beat(Beat.Style.Silent));
+        bar.addBeat(new Beat(Beat.Style.Silent));
+        bar.addBeat(new Beat(Beat.Style.Accent1));
+        sequence.addBar(bar);
+        sequences.addSequence(sequence);
+        return sequences;
     }
 }

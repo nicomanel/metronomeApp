@@ -208,8 +208,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <com.doumdoum.nmanel.metronome.ui.BarsSpinner
-                    android:id="@+id/rythmSpinnerId"
+                <com.doumdoum.nmanel.metronome.ui.SequencesSpinner
+                    android:id="@+id/sequencesSpinnerId"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentStart="true"
@@ -224,10 +224,11 @@
                     android:text="..." />
             </LinearLayout>
 
-            <com.doumdoum.nmanel.metronome.ui.BarView
-                android:id="@+id/mainActivityBarViewId"
+            <com.doumdoum.nmanel.metronome.ui.SequenceView
+                android:id="@+id/mainActivitySequenceViewId"
                 android:layout_width="match_parent"
-                android:layout_height="64dp" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
         </LinearLayout>
     </LinearLayout>
 

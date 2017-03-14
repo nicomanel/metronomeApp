@@ -33,8 +33,10 @@ public class Sequence extends Observable {
     }
 
     public void addBar(Bar bar) {
+        bar = bar.clone();
         if (bars == null) {
             bars = bar;
+            return;
         }
 
         Bar lastBar = bars;
@@ -67,6 +69,11 @@ public class Sequence extends Observable {
 
     public Bar getBars() {
         return bars;
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 
 }
