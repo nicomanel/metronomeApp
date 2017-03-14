@@ -49,6 +49,7 @@ public class MetronomeActivity extends AppCompatActivity {
     private EditText tempoEditText;
     private MetronomePlayer metronomePlayer;
     private Bar mainBar;
+    private Switch useSequenceSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +69,9 @@ public class MetronomeActivity extends AppCompatActivity {
         Button decreaseButton = (Button) findViewById(R.id.decreaseTempoButtonId);
         decreaseButton.setOnTouchListener(new TweakTempoOnTouchListener(tempoEditText, false));
 
-        metronomePlayer = new MetronomePlayer();
+        useSequenceSwitch = (Switch) findViewById(R.id.sequenceSelectionSwitchId);
 
+        metronomePlayer = new MetronomePlayer();
     }
 
     private void initTempoEditText() {
@@ -241,10 +243,9 @@ public class MetronomeActivity extends AppCompatActivity {
         final boolean enableTimer = ((Switch) findViewById(R.id.timerSwitchId)).isChecked();
         final int timerValue = enableTimer ? Integer.decode(((EditText) findViewById(R.id.timerDurationValueId)).getText().toString()) : 0;
         final boolean skipMeasure = ((Switch) findViewById(R.id.skipMeasureSwitchId)).isChecked();
-        Bar barToPlay = mainBar.clone();
-        if (skipMeasure) {
-            barToPlay.forgeSilentNextBar();
-        }
+
+        Bar barToPlay = chooseBarToPlay(skipMeasure);
+
         metronomePlayer.addStopPlayingListener(new MetronomePlayerListener() {
             @Override
             public void metronomeHasStopped() {
@@ -259,6 +260,19 @@ public class MetronomeActivity extends AppCompatActivity {
         metronomePlayer.play(barToPlay, tempo, timerValue, tempoIncrement, measureNumberBeforeIncrement);
     }
 
+    private Bar chooseBarToPlay(boolean skipMeasure) {
+        Bar barToPlay = mainBar.clone();
+        if (useSequenceSwitch.isChecked()) {
+            SequencesSpinner spinner = (SequencesSpinner) findViewById(R.id.sequencesSpinnerId);
+            barToPlay = ((Sequence) spinner.getSelectedItem()).getBars();
+        }
+
+        if (skipMeasure) {
+            barToPlay.forgeSilentNextBar();
+        }
+        return barToPlay;
+    }
+
     private void disableSleepingMode() {
         runOnUiThread(new Runnable() {
             @Override
@@ -266,7 +280,6 @@ public class MetronomeActivity extends AppCompatActivity {
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
         });
-
     }
 
     private void stopTickingUiUpdate() {

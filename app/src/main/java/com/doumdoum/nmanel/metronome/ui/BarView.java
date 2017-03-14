@@ -30,7 +30,6 @@ public class BarView extends LinearLayout implements Observer {
         abstractBeatViews = new ArrayList<>();
         setEditable(false);
         setBar(bar);
-
     }
 
     public BarView(Context context, AttributeSet set) {

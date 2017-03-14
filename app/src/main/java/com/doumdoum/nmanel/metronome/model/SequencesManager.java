@@ -83,6 +83,24 @@ public class SequencesManager {
         bar.addBeat(new Beat(Beat.Style.Accent1));
         sequence.addBar(bar);
         sequences.addSequence(sequence);
+
+        sequence = new Sequence("4 / 4 * 4");
+        bar = new Bar("4 / 4");
+        bar.addBeat(new Beat(Beat.Style.Accent1));
+        bar.addBeat(new Beat(Beat.Style.Normal));
+        bar.addBeat(new Beat(Beat.Style.Normal));
+        bar.addBeat(new Beat(Beat.Style.Normal));
+        sequence.addBar(bar);
+        sequence.addBar(bar);
+        sequence.addBar(bar);
+        bar = new Bar("4 / 4 Accented");
+        bar.addBeat(new Beat(Beat.Style.Accent1));
+        bar.addBeat(new Beat(Beat.Style.Accent1));
+        bar.addBeat(new Beat(Beat.Style.Accent1));
+        bar.addBeat(new Beat(Beat.Style.Accent1));
+        sequence.addBar(bar);
+        sequences.addSequence(sequence);
+
         return sequences;
     }
 }
