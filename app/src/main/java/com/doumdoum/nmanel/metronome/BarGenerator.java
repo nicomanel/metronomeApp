@@ -4,6 +4,7 @@ package com.doumdoum.nmanel.metronome;
 import android.util.Log;
 
 import com.doumdoum.nmanel.metronome.model.Bar;
+import com.doumdoum.nmanel.metronome.model.Beat;
 
 import java.util.Observable;
 import java.util.concurrent.LinkedTransferQueue;
@@ -16,6 +17,7 @@ import static com.doumdoum.nmanel.metronome.DefaultSettings.SAMPLERATE;
  */
 
 public class BarGenerator extends Observable {
+    private boolean firstBar;
     private LinkedTransferQueue<Short> samplesQueue;
     private boolean increaseTempo;
     private int tempoIncrement;
@@ -39,6 +41,7 @@ public class BarGenerator extends Observable {
         this.bufferSize = bufferSize;
         this.measureNumberBeforeIncrement = measureNumberBeforeIncrement;
         samplesToWrite = new short[bufferSize];
+        firstBar = true;
     }
 
     public BarGenerator(int tempo, int sampleRate, int bufferSize) {
@@ -71,9 +74,21 @@ public class BarGenerator extends Observable {
 
     private void forgeNextSamples() {
 
+
         while (samplesQueue.size() < bufferSize * 3) {
             int tempoOfTheNextBar = determineTempoAndUpdateCounters();
-            short[] newSamples = bar.generateSamples(tempoOfTheNextBar, sampleRate);
+            short[] newSamples;
+            if (firstBar) {
+                Bar firstBarToPlay = new Bar();
+                firstBarToPlay.addBeat(new Beat(Beat.Style.Accent2));
+                firstBarToPlay.addBeat(new Beat(Beat.Style.Accent2));
+                firstBarToPlay.addBeat(new Beat(Beat.Style.Accent2));
+                firstBarToPlay.addBeat(new Beat(Beat.Style.Accent2));
+                newSamples = firstBarToPlay.generateSamples(tempoOfTheNextBar, sampleRate);
+                firstBar = false;
+            } else {
+                newSamples = bar.generateSamples(tempoOfTheNextBar, sampleRate);
+            }
             fillQueue(newSamples);
             Log.d("BarGenerator", "forging : " + samplesQueue.size());
         }

@@ -7,7 +7,7 @@ package com.doumdoum.nmanel.metronome;
 public interface DefaultSettings {
     int SAMPLERATE = 16000;
     int BEAT_LENGTH_IN_MS = 100;
-    int BUFFER_SIZE = 2048;
+    int BUFFER_SIZE = 4096;
     int MAX_TEMPO_VALUE = 400;
     int MIN_TEMP_VALUE = 1;
 
