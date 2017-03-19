@@ -17,16 +17,19 @@ public class Sequences extends Observable implements Cloneable {
 
     public void addSequence(Sequence newSequence) {
         sequences.add(newSequence);
+        setChanged();
     }
 
     public void removeSequence(Sequence sequenceToRemove) {
         sequences.remove(sequenceToRemove);
+        setChanged();
     }
 
     public Sequences clone() {
         Sequences clone = null;
         try {
             clone = (Sequences) super.clone();
+            clone.deleteObservers();
         } catch (Exception e) {
 
         }

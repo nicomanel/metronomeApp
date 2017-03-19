@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 
-import com.doumdoum.nmanel.metronome.model.Bar;
 import com.doumdoum.nmanel.metronome.model.Sequence;
 import com.doumdoum.nmanel.metronome.model.Sequences;
 import com.doumdoum.nmanel.metronome.model.SequencesManager;
@@ -26,12 +25,16 @@ public class SequenceEditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sequence_editor);
         sequences = (new SequencesManager(getApplicationContext())).loadSequences();
         removeSequenceButton = (Button) findViewById(R.id.removeBarButtonId);
-        sequenceEditor = (SequenceEditor) findViewById(R.id.sequenceEditorSequenceViewId);
+        sequenceEditor = (SequenceEditor) findViewById(R.id.sequencesEditorId);
         sequencesSpinner = (SequencesSpinner) findViewById(R.id.sequencesEditorSpinnerId);
         sequencesSpinner.setSequences(sequences);
         sequencesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (sequenceEditor == null) {
+                    return;
+                }
+
                 if (sequences.getSequences().size() == 0) {
                     removeSequenceButton.setEnabled(false);
                     return;
@@ -56,13 +59,21 @@ public class SequenceEditorActivity extends AppCompatActivity {
     }
 
     public void removeSequenceAction(View view) {
-        sequences.removeSequence((Sequence) sequencesSpinner.getSelectedItem());
+//        if (sequences.getSequences().size() == 0)
+//        {
+//            return;
+//        }
+        Sequence sequenceToRemove = (Sequence) sequencesSpinner.getSelectedItem();
+        sequences.removeSequence(sequenceToRemove);
+        Sequence nextSequence = (Sequence) sequencesSpinner.getSelectedItem();
+        sequenceEditor.setSequence(nextSequence);
+        sequences.notifyObservers();
     }
 
     public void createNewSequenceAction(View view) {
-        Bar sequenceToEdit = new Bar();
         Sequence sequence = new Sequence("New Sequence");
         sequences.addSequence(sequence);
         sequenceEditor.setSequence(sequence);
+        sequences.notifyObservers();
     }
 }

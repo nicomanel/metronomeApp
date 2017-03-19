@@ -4,11 +4,23 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/sequenceEditorNameValueId"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/new_sequence" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Sequence Name : " />
+
+        <EditText
+            android:id="@+id/sequenceEditorNameValueId"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/new_sequence" />
+
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,14 +35,15 @@
 
         <Spinner
             android:id="@+id/sequenceEditorIterationNumberSpinnerId"
-            android:layout_width="48dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:entries="@array/iterationNumbers" />
 
         <Button
             android:id="@+id/sequenceEditorButtonAddBarsToSequenceId"
             android:layout_width="48dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="+" />
     </LinearLayout>
 
     <com.doumdoum.nmanel.metronome.ui.SequenceView

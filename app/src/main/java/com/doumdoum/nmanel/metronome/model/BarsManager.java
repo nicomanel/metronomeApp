@@ -1,14 +1,11 @@
 package com.doumdoum.nmanel.metronome.model;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -92,7 +89,7 @@ public class BarsManager {
         bars.addBar(bar);
         Bar bar2 = new Bar("2 / 4");
         bar2.addBeat(new Beat(Beat.Style.Accent1));
-        bar2.addBeat(new Beat(Beat.Style.Accent2));
+        bar2.addBeat(new Beat(Beat.Style.Normal));
         bars.addBar(bar2);
         return bars;
     }

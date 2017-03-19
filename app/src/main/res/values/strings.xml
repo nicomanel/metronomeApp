@@ -39,7 +39,7 @@
         <item>16</item>
     </string-array>
 
-    <integer-array name="iterationNumbers">
+    <string-array name="iterationNumbers">
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -48,7 +48,7 @@
         <item>6</item>
         <item>7</item>
         <item>8</item>
-    </integer-array>
+    </string-array>
 
 
 </resources>

@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.doumdoum.nmanel.metronome.model.Bar;
 import com.doumdoum.nmanel.metronome.model.Sequence;
@@ -22,7 +23,7 @@ import java.util.Observer;
 public class SequenceView extends LinearLayout implements Observer {
     private static final String LOG = SequenceView.class.toString();
     private Sequence sequence;
-    private List<BarView> barViews;
+    private List<LinearLayout> barViews;
 
     public SequenceView(Context context, AttributeSet set) {
         super(context, set);
@@ -42,17 +43,28 @@ public class SequenceView extends LinearLayout implements Observer {
     }
 
     private void updateViews() {
-        for (BarView view : barViews) {
+        for (LinearLayout view : barViews) {
             removeView(view);
         }
         barViews.clear();
 
         Bar barToDisplay = sequence.getBars();
+        int barCounter = 1;
         while (barToDisplay != null) {
+            LinearLayout ll = new LinearLayout(getContext());
+            ll.setOrientation(LinearLayout.HORIZONTAL);
+
+            TextView tv = new TextView(getContext());
+            tv.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 128));
+            tv.setText("" + barCounter);
+
             BarView newView = new BarView(getContext(), barToDisplay);
-            newView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 64));
-            addView(newView);
+            newView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 128));
+            ll.addView(tv);
+            ll.addView(newView);
+            addView(ll);
             barToDisplay = barToDisplay.getNextBar();
+            barCounter++;
             Log.i(LOG, "" + barToDisplay);
         }
     }
@@ -60,7 +72,7 @@ public class SequenceView extends LinearLayout implements Observer {
     @Override
     public void addView(View view) {
         super.addView(view);
-        barViews.add((BarView) view);
+        barViews.add((LinearLayout) view);
     }
 
 
