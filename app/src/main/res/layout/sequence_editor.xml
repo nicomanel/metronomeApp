@@ -50,11 +50,52 @@
                 android:text="Create a new bar" />
         </RadioGroup>
 
+        <LinearLayout
+            android:id="@+id/sequenceEditorBarEditorLayoutId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
         <com.doumdoum.nmanel.metronome.ui.BarEditor
             android:id="@+id/sequenceEditorBarEditorId"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Repeat " />
+
+                <Spinner
+                    android:id="@+id/sequenceEditorBarEditorIterationNumberSpinnerId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/iterationNumbers" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" X " />
+
+                <Button
+                    android:id="@+id/sequenceEditorBarEditorButtonAddBarsToSequenceId"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:text="+" />
+
+                <Button
+                    android:id="@+id/sequenceEditorBarEditorButtonAddBarsToSequenceAndSaveId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add and Save" />
+            </LinearLayout>
+        </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/sequenceEditorBarChoiceLayoutId"
@@ -69,13 +110,18 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Repeat " />
         <Spinner
             android:id="@+id/sequenceEditorIterationNumberSpinnerId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:entries="@array/iterationNumbers" />
 
-        <Button
+
+            <Button
             android:id="@+id/sequenceEditorButtonAddBarsToSequenceId"
             android:layout_width="48dp"
             android:layout_height="wrap_content"

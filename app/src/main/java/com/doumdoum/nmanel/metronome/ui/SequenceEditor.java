@@ -28,6 +28,8 @@ public class SequenceEditor extends LinearLayout implements Observer {
 
     private static final String LOG = SequenceEditor.class.toString();
     private final BarEditor barEditor;
+    private final Button addBarToSequenceFromBarEditorButton;
+    private final Button addBarToSequenceAndSaveButton;
     private Button addBarToSequenceButton;
     private SequenceView sequenceView;
     private Spinner iterationNumberSpinner;
@@ -37,11 +39,17 @@ public class SequenceEditor extends LinearLayout implements Observer {
     private Bars bars;
     private RadioButton useExistingBarsButton;
     private RadioButton createNewBarButton;
+    private Bar barInCreation;
+
 
     public SequenceEditor(Context context, AttributeSet attrs) {
         super(context, attrs);
         addView(LayoutInflater.from(context).inflate(R.layout.sequence_editor, null));
+
         addBarToSequenceButton = (Button) findViewById(R.id.sequenceEditorButtonAddBarsToSequenceId);
+        addBarToSequenceFromBarEditorButton = (Button) findViewById(R.id.sequenceEditorBarEditorButtonAddBarsToSequenceId);
+        addBarToSequenceAndSaveButton = (Button) findViewById(R.id.sequenceEditorBarEditorButtonAddBarsToSequenceAndSaveId);
+
         bars = (new BarsManager(context)).loadBars();
         barChoiceSpinner = (BarsSpinner) findViewById(R.id.sequenceEditorBarChoiceSpinnerId);
         iterationNumberSpinner = (Spinner) findViewById(R.id.sequenceEditorIterationNumberSpinnerId);
@@ -57,20 +65,21 @@ public class SequenceEditor extends LinearLayout implements Observer {
             public void onClick(View view) {
                 switch (view.getId()) {
                     case R.id.sequenceEditorUseExistingBarsButtonId:
-                        barEditor.setVisibility(GONE);
-
+//                        barEditor.setVisibility(GONE);
+                        findViewById(R.id.sequenceEditorBarEditorLayoutId).setVisibility(GONE);
 
                         findViewById(R.id.sequenceEditorBarChoiceLayoutId).setVisibility(VISIBLE);
                         barChoiceSpinner.setBars(bars);
                         break;
                     case R.id.sequenceEditorCreateNewBarButtonId:
-                        Bar bar = new Bar("New Bar");
-                        bar.addBeat(new Beat(Beat.Style.Accent1));
-                        bar.addBeat(new Beat(Beat.Style.Normal));
-                        bar.addBeat(new Beat(Beat.Style.Normal));
-                        bar.addBeat(new Beat(Beat.Style.Normal));
-                        barEditor.setBar(bar);
-                        findViewById(R.id.sequenceEditorBarEditorId).setVisibility(VISIBLE);
+                        barInCreation = new Bar("New Bar");
+                        bars.addBar(barInCreation);
+                        barInCreation.addBeat(new Beat(Beat.Style.Accent1));
+                        barInCreation.addBeat(new Beat(Beat.Style.Normal));
+                        barInCreation.addBeat(new Beat(Beat.Style.Normal));
+                        barInCreation.addBeat(new Beat(Beat.Style.Normal));
+                        barEditor.setBar(barInCreation);
+                        findViewById(R.id.sequenceEditorBarEditorLayoutId).setVisibility(VISIBLE);
                         findViewById(R.id.sequenceEditorBarChoiceLayoutId).setVisibility(GONE);
                         break;
                 }
@@ -86,7 +95,7 @@ public class SequenceEditor extends LinearLayout implements Observer {
                 if (sequence == null)
                     return;
 
-                int iteration = Integer.valueOf("" + iterationNumberSpinner.getSelectedItem()).intValue();
+                int iteration = Integer.valueOf(iterationNumberSpinner.getSelectedItem().toString()).intValue();
                 Bar bar = (Bar) barChoiceSpinner.getSelectedItem();
 
                 for (int i = 0; i < iteration; i++) {
