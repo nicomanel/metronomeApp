@@ -20,10 +20,46 @@
             android:layout_height="match_parent"
             android:text="@string/new_sequence" />
 
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <RadioButton
+                android:id="@+id/sequenceEditorUseExistingBarsButtonId"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="Use existing bars" />
+
+            <RadioButton
+                android:id="@+id/sequenceEditorCreateNewBarButtonId"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Create a new bar" />
+        </RadioGroup>
+
+        <com.doumdoum.nmanel.metronome.ui.BarEditor
+            android:id="@+id/sequenceEditorBarEditorId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/sequenceEditorBarChoiceLayoutId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="1">
 
@@ -46,6 +82,8 @@
             android:text="+" />
     </LinearLayout>
 
+
+    </LinearLayout>
     <com.doumdoum.nmanel.metronome.ui.SequenceView
         android:id="@+id/sequenceEditorSequenceViewId"
         android:layout_width="match_parent"

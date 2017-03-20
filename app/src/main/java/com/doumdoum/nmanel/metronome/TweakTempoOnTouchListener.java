@@ -1,7 +1,6 @@
 package com.doumdoum.nmanel.metronome;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -13,15 +12,14 @@ import static com.doumdoum.nmanel.metronome.DefaultSettings.PRESS_TEMPO_CHANGE_T
  */
 
 public class TweakTempoOnTouchListener implements View.OnTouchListener {
+    private static final String LOG = TweakTempoOnTouchListener.class.toString();
     private final Handler handler = new Handler();
-    private String TAG = "ontouch";
     private boolean increaseOrDecrease;
     private boolean fastClick;
     private EditText tempoValueEditText;
     private final Runnable increaseOrDecreaseAction = new Runnable() {
         @Override
         public void run() {
-            Log.i(TAG, "pressed");
             handler.postDelayed(this, PRESS_TEMPO_CHANGE_TIME_IN_MS);
             incrementOrDecrementTempo(5);
             fastClick = false;
@@ -42,11 +40,9 @@ public class TweakTempoOnTouchListener implements View.OnTouchListener {
             case MotionEvent.ACTION_DOWN:
                 fastClick = true;
                 handler.postDelayed(increaseOrDecreaseAction, PRESS_TEMPO_CHANGE_TIME_IN_MS);
-                Log.i(TAG, "Action was DOWN");
                 break;
 
             case MotionEvent.ACTION_UP:
-                Log.i(TAG, "Action was UP");
                 handler.removeCallbacks(increaseOrDecreaseAction);
                 if (fastClick)
                 {

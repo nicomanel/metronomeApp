@@ -32,6 +32,7 @@ public class BarEditor extends LinearLayout {
         super(context, set);
         addView(LayoutInflater.from(context).inflate(R.layout.bar_editor, null));
         barView = (BarView) findViewById(R.id.barViewId);
+
         barView.setEditable(true);
         setSimpleView(false);
         barNameEditText = (EditText) findViewById(R.id.barNameId);
@@ -87,6 +88,7 @@ public class BarEditor extends LinearLayout {
 
 
         beatsNumberSpinner = (Spinner) findViewById(R.id.beatNumberValueId);
+//        beatsNumberSpinner.setSelection(3);
         beatsNumberSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -113,6 +115,7 @@ public class BarEditor extends LinearLayout {
 
             }
         });
+
     }
 
     public void setBar(Bar bar) {
