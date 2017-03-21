@@ -33,9 +33,9 @@ public class Sequence extends Observable {
     }
 
     public void addBar(Bar bar) {
-        bar = bar.clone();
+        Bar clonedBar = bar.clone();
         if (bars == null) {
-            bars = bar;
+            bars = clonedBar;
             return;
         }
 
@@ -43,7 +43,7 @@ public class Sequence extends Observable {
         while (lastBar.getNextBar() != null) {
             lastBar = lastBar.getNextBar();
         }
-        lastBar.setNextBar(bar);
+        lastBar.setNextBar(clonedBar);
         setChanged();
     }
 

@@ -1,10 +1,8 @@
 package com.doumdoum.nmanel.metronome.model;
 
-import android.os.Parcelable;
 import android.util.Log;
 
 import com.doumdoum.nmanel.metronome.MetronomeHelper;
-import com.google.android.gms.common.data.DataBufferObserver;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -108,13 +106,11 @@ public class Bar extends Observable implements Cloneable {
     }
 
     public Bar clone() {
-        Bar clonedBar = null;
-        try {
-            clonedBar = (Bar) super.clone();
-        } catch (CloneNotSupportedException exception) {
-            Log.e("Bar", "Bar not cloneable");
-        }
+        Bar clonedBar = new Bar(getName());
 
+        for (Beat beat : this.getBeats()) {
+            clonedBar.addBeat(new Beat(beat.getBeatStyle()));
+        }
         return clonedBar;
     }
 

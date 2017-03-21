@@ -29,6 +29,7 @@
 
 
         <RadioGroup
+            android:id="@+id/sequenceEditorBarTypeGroupId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -84,15 +85,17 @@
 
                 <Button
                     android:id="@+id/sequenceEditorBarEditorButtonAddBarsToSequenceId"
-                    android:layout_width="48dp"
+                    android:layout_width="64dp"
                     android:layout_height="wrap_content"
-                    android:text="+" />
+                    android:text="Add"
+                    android:textAllCaps="false" />
 
                 <Button
                     android:id="@+id/sequenceEditorBarEditorButtonAddBarsToSequenceAndSaveId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Add and Save" />
+                    android:text="Add &amp; Save"
+                    android:textAllCaps="false" />
             </LinearLayout>
         </LinearLayout>
 

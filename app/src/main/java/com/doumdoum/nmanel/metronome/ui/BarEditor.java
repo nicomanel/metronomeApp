@@ -118,18 +118,6 @@ public class BarEditor extends LinearLayout {
 
     }
 
-    public void setBar(Bar bar) {
-        if (barToEdit != null)
-            barToEdit.deleteObservers();
-        barToEdit = bar;
-        barNameEditText.setText(bar.getName());
-        beatsNumberSpinner.setSelection(bar.getBeatsNumber() - 1);
-        timeSignatureSpinner.setSelection(findTimeSignatureIndexFromString(barToEdit.getSignature()));
-        barToEdit.addObserver(barView);
-        barView.setBar(barToEdit);
-
-    }
-
     private int findTimeSignatureIndexFromString(Bar.TimeSignature signature) {
         int index = 0;
         switch (signature)
@@ -161,5 +149,21 @@ public class BarEditor extends LinearLayout {
             findViewById(R.id.barNameLayoutId).setVisibility(VISIBLE);
             findViewById(R.id.timeSignatureLayoutId).setVisibility(VISIBLE);
         }
+    }
+
+    public Bar getBar() {
+        return barToEdit;
+    }
+
+    public void setBar(Bar bar) {
+        if (barToEdit != null)
+            barToEdit.deleteObservers();
+        barToEdit = bar;
+        barNameEditText.setText(bar.getName());
+        beatsNumberSpinner.setSelection(bar.getBeatsNumber() - 1);
+        timeSignatureSpinner.setSelection(findTimeSignatureIndexFromString(barToEdit.getSignature()));
+        barToEdit.addObserver(barView);
+        barView.setBar(barToEdit);
+
     }
 }

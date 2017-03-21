@@ -59,21 +59,18 @@ public class SequenceEditorActivity extends AppCompatActivity {
     }
 
     public void removeSequenceAction(View view) {
-//        if (sequences.getSequences().size() == 0)
-//        {
-//            return;
-//        }
         Sequence sequenceToRemove = (Sequence) sequencesSpinner.getSelectedItem();
         sequences.removeSequence(sequenceToRemove);
+        sequences.notifyObservers();
         Sequence nextSequence = (Sequence) sequencesSpinner.getSelectedItem();
         sequenceEditor.setSequence(nextSequence);
-        sequences.notifyObservers();
     }
 
     public void createNewSequenceAction(View view) {
         Sequence sequence = new Sequence("New Sequence");
         sequences.addSequence(sequence);
-        sequenceEditor.setSequence(sequence);
         sequences.notifyObservers();
+        sequenceEditor.setSequence(sequence);
+        sequencesSpinner.setSelection(sequences.getSequences().size() - 1);
     }
 }
