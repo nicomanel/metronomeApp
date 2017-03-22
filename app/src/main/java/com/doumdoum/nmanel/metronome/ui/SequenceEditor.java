@@ -35,6 +35,7 @@ public class SequenceEditor extends LinearLayout implements Observer {
     private final Spinner iterationNumberSpinnerForBarEditor;
     private final RadioGroup barTypeButtons;
     private Button addBarToSequenceButton;
+    c
     private SequenceView sequenceView;
     private Spinner iterationNumberSpinner;
     private Sequence sequence;
