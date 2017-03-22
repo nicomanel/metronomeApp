@@ -98,4 +98,6 @@ public class BarsManager {
     {
         context.deleteFile(BARS_FILENAME);
     }
+
+
 }

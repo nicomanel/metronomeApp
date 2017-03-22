@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 
+import com.doumdoum.nmanel.metronome.model.BarsManager;
 import com.doumdoum.nmanel.metronome.model.Sequence;
 import com.doumdoum.nmanel.metronome.model.Sequences;
 import com.doumdoum.nmanel.metronome.model.SequencesManager;
@@ -34,7 +35,6 @@ public class SequenceEditorActivity extends AppCompatActivity {
                 if (sequenceEditor == null) {
                     return;
                 }
-
                 if (sequences.getSequences().size() == 0) {
                     removeSequenceButton.setEnabled(false);
                     return;
@@ -52,10 +52,9 @@ public class SequenceEditorActivity extends AppCompatActivity {
     }
 
     public void saveSequenceAction(View view) {
-    }
-
-    public void addToSequenceAction(View view) {
-
+        (new SequencesManager(getApplicationContext())).saveSequences(sequences);
+        (new BarsManager(getApplicationContext())).saveBars(sequenceEditor.getBars());
+        super.finish();
     }
 
     public void removeSequenceAction(View view) {

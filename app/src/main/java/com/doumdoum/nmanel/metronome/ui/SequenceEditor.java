@@ -159,10 +159,6 @@ public class SequenceEditor extends LinearLayout implements Observer {
         updateSequenceUI();
     }
 
-    public void setBars(Bars bars) {
-        this.bars = bars;
-    }
-
     private void updateSequenceUI() {
         if (sequence == null) {
             this.setVisibility(GONE);
@@ -173,9 +169,16 @@ public class SequenceEditor extends LinearLayout implements Observer {
         sequenceView.setSequence(sequence);
     }
 
-
     @Override
     public void update(Observable o, Object arg) {
         updateSequenceUI();
+    }
+
+    public Bars getBars() {
+        return bars;
+    }
+
+    public void setBars(Bars bars) {
+        this.bars = bars;
     }
 }
