@@ -17,7 +17,7 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="plus_sign">+</string>
     <string name="new_sequence">New Sequence</string>
-    <string name="save_sequence">save_sequence_button_label</string>
+    <string name="save_sequence">Save</string>
     <string name="minus_sign">-</string>
 
 

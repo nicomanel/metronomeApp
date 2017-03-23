@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.doumdoum.nmanel.metronome.ui.BarView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/barListViewId"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:clickable="true" />

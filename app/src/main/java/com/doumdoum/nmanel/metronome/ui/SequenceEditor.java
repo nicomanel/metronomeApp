@@ -5,6 +5,7 @@ import android.support.annotation.IdRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -32,7 +33,7 @@ public class SequenceEditor extends LinearLayout implements Observer {
     private final BarEditor barEditor;
     private final Button addBarToSequenceFromBarEditorButton;
     private final Button addBarToSequenceAndSaveButton;
-    private final Spinner iterationNumberSpinnerForBarEditor;
+    private final Spinner iterationNumberForBarEditorSpinner;
     private final RadioGroup barTypeButtons;
     private Button addBarToSequenceButton;
     private SequenceView sequenceView;
@@ -41,9 +42,11 @@ public class SequenceEditor extends LinearLayout implements Observer {
     private EditText sequenceName;
     private BarsSpinner barChoiceSpinner;
     private Bars bars;
+    private int currentIteration;
     private RadioButton useExistingBarsButton;
     private RadioButton createNewBarButton;
-    private Bar barInCreation;
+    private Bar currentBar;
+    private SequenceEditorListener listener;
 
 
     public SequenceEditor(Context context, AttributeSet attrs) {
@@ -56,9 +59,35 @@ public class SequenceEditor extends LinearLayout implements Observer {
 
         bars = (new BarsManager(context)).loadBars();
         barChoiceSpinner = (BarsSpinner) findViewById(R.id.sequenceEditorBarChoiceSpinnerId);
+        barChoiceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currentBar = (Bar) parent.getSelectedItem();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        AdapterView.OnItemSelectedListener iterationNumberOnSelectionListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currentIteration = Integer.valueOf(parent.getSelectedItem().toString()).intValue();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        };
         iterationNumberSpinner = (Spinner) findViewById(R.id.sequenceEditorIterationNumberSpinnerId);
-        iterationNumberSpinnerForBarEditor = (Spinner) findViewById(R.id.sequenceEditorBarEditorIterationNumberSpinnerId);
+        iterationNumberSpinner.setOnItemSelectedListener(iterationNumberOnSelectionListener);
+        iterationNumberForBarEditorSpinner = (Spinner) findViewById(R.id.sequenceEditorBarEditorIterationNumberSpinnerId);
+        iterationNumberForBarEditorSpinner.setOnItemSelectedListener(iterationNumberOnSelectionListener);
         barChoiceSpinner.setBars(bars);
+
         sequenceName = (EditText) findViewById(R.id.sequenceEditorNameValueId);
         sequenceView = (SequenceView) findViewById(R.id.sequenceEditorSequenceViewId);
         barTypeButtons = (RadioGroup) findViewById(R.id.sequenceEditorBarTypeGroupId);
@@ -75,77 +104,26 @@ public class SequenceEditor extends LinearLayout implements Observer {
                         findViewById(R.id.sequenceEditorBarEditorLayoutId).setVisibility(GONE);
                         findViewById(R.id.sequenceEditorBarChoiceLayoutId).setVisibility(VISIBLE);
                         barChoiceSpinner.setBars(bars);
+                        currentIteration = Integer.valueOf(iterationNumberSpinner.getSelectedItem().toString()).intValue();
                         break;
                     case R.id.sequenceEditorCreateNewBarButtonId:
-                        barInCreation = new Bar("New Bar");
-                        barInCreation.addBeat(new Beat(Beat.Style.Accent1));
-                        barInCreation.addBeat(new Beat(Beat.Style.Normal));
-                        barInCreation.addBeat(new Beat(Beat.Style.Normal));
-                        barInCreation.addBeat(new Beat(Beat.Style.Normal));
-                        barEditor.setBar(barInCreation);
+                        currentBar = new Bar("New Bar");
+                        currentBar.addBeat(new Beat(Beat.Style.Accent1));
+                        currentBar.addBeat(new Beat(Beat.Style.Normal));
+                        currentBar.addBeat(new Beat(Beat.Style.Normal));
+                        currentBar.addBeat(new Beat(Beat.Style.Normal));
+                        barEditor.setBar(currentBar);
                         findViewById(R.id.sequenceEditorBarEditorLayoutId).setVisibility(VISIBLE);
                         findViewById(R.id.sequenceEditorBarChoiceLayoutId).setVisibility(GONE);
+                        currentIteration = Integer.valueOf(iterationNumberForBarEditorSpinner.getSelectedItem().toString()).intValue();
                         break;
             }
             }
         });
 
-        addBarToSequenceButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (sequence == null)
-                    return;
-
-                int iteration = Integer.valueOf(iterationNumberSpinner.getSelectedItem().toString()).intValue();
-                Bar bar = (Bar) barChoiceSpinner.getSelectedItem();
-
-                for (int i = 0; i < iteration; i++) {
-                    sequence.addBar(bar.clone());
-                }
-                sequence.notifyObservers();
-            }
-        });
-
-
-        addBarToSequenceFromBarEditorButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (sequence == null) {
-                    return;
-                }
-                Bar bar = barEditor.getBar().clone();
-                int iteration = Integer.valueOf(iterationNumberSpinnerForBarEditor.getSelectedItem().toString()).intValue();
-                for (int i = 0; i < iteration; i++) {
-                    sequence.addBar(bar);
-
-                }
-                sequence.notifyObservers();
-            }
-        });
-
-        addBarToSequenceAndSaveButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (sequence == null) {
-                    return;
-                }
-                Bar bar = barEditor.getBar();
-                int iteration = Integer.valueOf(iterationNumberSpinnerForBarEditor.getSelectedItem().toString()).intValue();
-                for (int i = 0; i < iteration; i++) {
-                    sequence.addBar(bar);
-
-                }
-                sequence.notifyObservers();
-                bars.addBar(bar);
-                bars.notifyObservers();
-                barTypeButtons.check(R.id.sequenceEditorUseExistingBarsButtonId);
-
-
-
-            }
-        });
-
-
+        addBarToSequenceButton.setOnClickListener(new AddBarOnClickListener());
+        addBarToSequenceFromBarEditorButton.setOnClickListener(new AddBarOnClickListener());
+        addBarToSequenceAndSaveButton.setOnClickListener(new AddBarAndSaveOnClickListener());
     }
 
     public void setSequence(Sequence newSequence) {
@@ -180,5 +158,42 @@ public class SequenceEditor extends LinearLayout implements Observer {
 
     public void setBars(Bars bars) {
         this.bars = bars;
+    }
+
+    public void setSequenceEditorListener(SequenceEditorListener listener) {
+        this.listener = listener;
+    }
+
+    private void callListenerHasChanged() {
+        if (listener == null)
+            return;
+        listener.hasChanged(this);
+    }
+
+    protected class AddBarOnClickListener implements OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if (sequence == null) {
+                return;
+            }
+
+            for (int i = 0; i < currentIteration; i++) {
+                sequence.addBar(currentBar);
+
+            }
+            sequence.notifyObservers();
+            callListenerHasChanged();
+        }
+    }
+
+    protected class AddBarAndSaveOnClickListener extends AddBarOnClickListener {
+        @Override
+        public void onClick(View v) {
+            super.onClick(v);
+            bars.addBar(currentBar);
+            bars.notifyObservers();
+            barTypeButtons.check(R.id.sequenceEditorUseExistingBarsButtonId);
+            callListenerHasChanged();
+        }
     }
 }
