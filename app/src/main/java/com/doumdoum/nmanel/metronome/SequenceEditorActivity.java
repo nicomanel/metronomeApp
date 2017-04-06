@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 
+import com.doumdoum.nmanel.metronome.model.Bar;
+import com.doumdoum.nmanel.metronome.model.Bars;
 import com.doumdoum.nmanel.metronome.model.BarsManager;
 import com.doumdoum.nmanel.metronome.model.Sequence;
 import com.doumdoum.nmanel.metronome.model.Sequences;
@@ -77,5 +79,13 @@ public class SequenceEditorActivity extends AppCompatActivity {
         sequencesSpinner.setSelection(sequences.getSequences().size() - 1);
     }
 
+    private void writeToGson() {
+        SequencesManager manager = new SequencesManager(getApplicationContext());
+        Sequences clonedSequences = sequences.clone();
+        for (Sequence sequence : clonedSequences.getSequences()) {
+            sequence.deleteObservers();
+        }
+        manager.saveSequences(clonedSequences);
+    }
 
 }

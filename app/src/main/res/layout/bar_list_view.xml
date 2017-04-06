@@ -3,5 +3,4 @@
 <com.doumdoum.nmanel.metronome.ui.BarView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/barListViewId"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
-    android:clickable="true" />
+    android:layout_height="64dp" />

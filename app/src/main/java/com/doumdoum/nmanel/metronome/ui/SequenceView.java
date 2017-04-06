@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.doumdoum.nmanel.metronome.model.Bar;
@@ -24,12 +25,15 @@ public class SequenceView extends LinearLayout implements Observer {
     private static final String LOG = SequenceView.class.toString();
     private Sequence sequence;
     private List<LinearLayout> barViews;
+    private ListView view;
 
     public SequenceView(Context context, AttributeSet set) {
         super(context, set);
         setOrientation(LinearLayout.VERTICAL);
         barViews = new ArrayList<>();
         sequence = null;
+        view = new ListView(getContext(), set);
+
 
     }
 

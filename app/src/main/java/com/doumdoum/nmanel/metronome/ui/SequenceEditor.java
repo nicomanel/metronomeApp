@@ -30,7 +30,7 @@ import java.util.Observer;
 public class SequenceEditor extends LinearLayout implements Observer {
 
     private static final String LOG = SequenceEditor.class.toString();
-    private final BarEditor barEditor;
+    private final CompleteBarEditor completeBarEditor;
     private final Button addBarToSequenceFromBarEditorButton;
     private final Button addBarToSequenceAndSaveButton;
     private final Spinner iterationNumberForBarEditorSpinner;
@@ -93,7 +93,7 @@ public class SequenceEditor extends LinearLayout implements Observer {
         barTypeButtons = (RadioGroup) findViewById(R.id.sequenceEditorBarTypeGroupId);
         useExistingBarsButton = (RadioButton) findViewById(R.id.sequenceEditorUseExistingBarsButtonId);
         createNewBarButton = (RadioButton) findViewById(R.id.sequenceEditorCreateNewBarButtonId);
-        barEditor = (BarEditor) findViewById(R.id.sequenceEditorBarEditorId);
+        completeBarEditor = (CompleteBarEditor) findViewById(R.id.sequenceEditorBarEditorId);
 
         barTypeButtons.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -112,7 +112,7 @@ public class SequenceEditor extends LinearLayout implements Observer {
                         currentBar.addBeat(new Beat(Beat.Style.Normal));
                         currentBar.addBeat(new Beat(Beat.Style.Normal));
                         currentBar.addBeat(new Beat(Beat.Style.Normal));
-                        barEditor.setBar(currentBar);
+                        completeBarEditor.setBar(currentBar);
                         findViewById(R.id.sequenceEditorBarEditorLayoutId).setVisibility(VISIBLE);
                         findViewById(R.id.sequenceEditorBarChoiceLayoutId).setVisibility(GONE);
                         currentIteration = Integer.valueOf(iterationNumberForBarEditorSpinner.getSelectedItem().toString()).intValue();

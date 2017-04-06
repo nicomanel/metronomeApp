@@ -2,10 +2,10 @@ package com.doumdoum.nmanel.metronome.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -21,7 +21,8 @@ import java.util.Observer;
  * Created by nmanel on 3/3/2017.
  */
 
-public class BarsSpinner extends android.support.v7.widget.AppCompatSpinner implements Observer{
+public class BarsSpinner extends Spinner implements Observer {
+    private final static String LOG = BarsSpinner.class.toString();
     private Bars bars;
 
     public BarsSpinner(Context context, Bars bars) {
@@ -33,9 +34,10 @@ public class BarsSpinner extends android.support.v7.widget.AppCompatSpinner impl
         super(context, set);
     }
 
-    public void setBars(Bars bars) {
+    public void setBars(final Bars bars) {
         this.bars = bars;
-        ArrayAdapter<Bar> adapter = new ArrayAdapter<Bar>(getContext(), R.layout.bar_list_view, bars.getBars()) {
+
+        final ArrayAdapter<Bar> adapter = new ArrayAdapter<Bar>(getContext(), R.layout.spinner_item, bars.getBars()) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View rowView = LayoutInflater.from(getContext()).inflate(R.layout.bar_list_view, parent, false);
@@ -44,14 +46,11 @@ public class BarsSpinner extends android.support.v7.widget.AppCompatSpinner impl
                 return rowView;
             }
 
-
             @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                BarView barView = new BarView(parent.getContext(), getItem(position));
-                barView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 128));
+            public View getDropDownView(final int position, View convertView, ViewGroup parent) {
+                BarView barView = new BarView(getContext(), getItem(position));
                 barView.setClickable(true);
-
-
+                barView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 128));
                 return barView;
             }
         };

@@ -22,7 +22,7 @@ import com.doumdoum.nmanel.metronome.model.Beat;
 import com.doumdoum.nmanel.metronome.model.Sequence;
 import com.doumdoum.nmanel.metronome.model.Sequences;
 import com.doumdoum.nmanel.metronome.model.SequencesManager;
-import com.doumdoum.nmanel.metronome.ui.BarEditor;
+import com.doumdoum.nmanel.metronome.ui.CompleteBarEditor;
 import com.doumdoum.nmanel.metronome.ui.SequenceView;
 import com.doumdoum.nmanel.metronome.ui.SequencesSpinner;
 
@@ -140,8 +140,8 @@ public class MetronomeActivity extends AppCompatActivity {
         mainBar.addBeat();
         mainBar.addBeat();
 
-        ((BarEditor) findViewById(R.id.mainActivityBarEditorId)).setBar(mainBar);
-        ((BarEditor) findViewById(R.id.mainActivityBarEditorId)).setSimpleView(true);
+        ((CompleteBarEditor) findViewById(R.id.mainActivityBarEditorId)).setBar(mainBar);
+        ((CompleteBarEditor) findViewById(R.id.mainActivityBarEditorId)).setSimpleView(true);
     }
 
     private void initSwitches() {

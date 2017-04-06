@@ -57,7 +57,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone">
-        <com.doumdoum.nmanel.metronome.ui.BarEditor
+
+            <com.doumdoum.nmanel.metronome.ui.CompleteBarEditor
             android:id="@+id/sequenceEditorBarEditorId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

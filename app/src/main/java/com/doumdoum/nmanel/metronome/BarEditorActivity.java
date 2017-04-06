@@ -12,7 +12,7 @@ import com.doumdoum.nmanel.metronome.model.Bar;
 import com.doumdoum.nmanel.metronome.model.Bars;
 import com.doumdoum.nmanel.metronome.model.BarsManager;
 import com.doumdoum.nmanel.metronome.model.Beat;
-import com.doumdoum.nmanel.metronome.ui.BarEditor;
+import com.doumdoum.nmanel.metronome.ui.CompleteBarEditor;
 import com.doumdoum.nmanel.metronome.ui.BarsSpinner;
 
 public class BarEditorActivity extends AppCompatActivity {
@@ -20,7 +20,7 @@ public class BarEditorActivity extends AppCompatActivity {
     private static final int SEQUENCE_EDITOR_ACTIVITY_RETURN = 55;
     private Bars bars;
     private BarsSpinner barsSpinner;
-    private BarEditor barEditor;
+    private CompleteBarEditor completeBarEditor;
 
 
     @Override
@@ -28,13 +28,13 @@ public class BarEditorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bar_editor);
         bars = (new BarsManager(getApplicationContext()).loadBars());
-        barEditor = (BarEditor) findViewById(R.id.barEditorId);
+        completeBarEditor = (CompleteBarEditor) findViewById(R.id.barEditorId);
         barsSpinner = ((BarsSpinner) findViewById(R.id.sequencesSpinnerId));
         barsSpinner.setBars(bars);
         barsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                barEditor.setBar((Bar)parent.getSelectedItem());
+                completeBarEditor.setBar((Bar) parent.getSelectedItem());
             }
 
             @Override
@@ -65,7 +65,7 @@ public class BarEditorActivity extends AppCompatActivity {
         newBar.addBeat(new Beat(Beat.Style.Normal));
         newBar.addBeat(new Beat(Beat.Style.Normal));
         bars.addBar(newBar);
-        barEditor.setBar(newBar);
+        completeBarEditor.setBar(newBar);
     }
 
     public void removeSequenceAction(View view) {

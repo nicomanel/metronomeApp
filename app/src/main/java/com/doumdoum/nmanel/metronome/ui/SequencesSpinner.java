@@ -6,7 +6,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.doumdoum.nmanel.metronome.R;
-import com.doumdoum.nmanel.metronome.model.Bar;
 import com.doumdoum.nmanel.metronome.model.Sequence;
 import com.doumdoum.nmanel.metronome.model.Sequences;
 
@@ -18,7 +17,7 @@ import java.util.Observer;
  */
 
 
-public class SequencesSpinner extends android.support.v7.widget.AppCompatSpinner implements Observer {
+public class SequencesSpinner extends Spinner implements Observer {
     private Sequences sequences;
 
     public SequencesSpinner(Context context, AttributeSet attrs) {
