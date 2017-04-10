@@ -39,7 +39,6 @@ public class SequenceEditorActivity extends AppCompatActivity {
             }
         });
 
-
         sequencesSpinner = (SequencesSpinner) findViewById(R.id.sequencesEditorSpinnerId);
         sequencesSpinner.setSequences(sequences);
         sequencesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -88,4 +87,9 @@ public class SequenceEditorActivity extends AppCompatActivity {
         manager.saveSequences(clonedSequences);
     }
 
+    @Override
+    public void finish() {
+        writeToGson();
+        super.finish();
+    }
 }

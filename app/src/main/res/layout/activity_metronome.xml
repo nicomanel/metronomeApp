@@ -74,7 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/mainActivityBarEditorId"
-        android:text="Increase tempo periodically" />
+        android:text="Increase tempo Over the time" />
 
     <LinearLayout
         android:id="@+id/increaseSettingsGroupId"
